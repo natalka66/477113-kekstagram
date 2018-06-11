@@ -46,4 +46,22 @@ var randomNumber = function(i) {
   return number;
 };
 
+var showThumbnails = function(picturesArray) {
+  var templatePicture = document.querySelector('#picture').content.querySelector('.picture__link');
+  var picturesContainer = document.querySelector('.pictures');
+  for (var i = 0; i < picturesArray.length; i++) {
+    var pictureElement = templatePicture.cloneNode(true);
+    pictureElement.querySelector('.picture__img').src = picturesArray[i].url;
+    pictureElement.querySelector('.picture__stat--likes').textContent = picturesArray[i].likes;
+    pictureElement.querySelector('.picture__stat--comments').textContent = picturesArray[i].comment;
+    var fragment = document.createDocumentFragment();
+    fragment.appendChild(pictureElement);
+    picturesContainer.appendChild(fragment);
+  };
+}
+showThumbnails(createArray());
 
+var showElementRemoveHidden = function () {
+  var userElement = document.querySelector('.big-picture');
+  userElement.classList.remove('hidden');
+}
