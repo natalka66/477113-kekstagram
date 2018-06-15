@@ -113,12 +113,38 @@ var removeCountComments = function() {
   socialLoadmore.classList.add('visually-hidden');
 };
 
-var initializePictures = function() {
-  var picturesArray = createArray();
+var initializePictures = function(picturesArray) {
   showThumbnails(picturesArray);
   showBigPicture(picturesArray[0]);
   removeCountComments();
-  showBigPicturePopUp();
+  // showBigPicturePopUp();
 };
 
-initializePictures();
+var picturesArray = createArray();
+initializePictures(picturesArray);
+
+var addClickHenderToShowBigPopUp = function () {
+  var picturesLinks = document.querySelectorAll('.picture__link');
+  for (var i = 0; i < picturesLinks.length; i++) {
+    (function (j) {
+      picturesLinks[j].addEventListener('click', function () {
+        showBigPicturePopUp();
+        showBigPicture(picturesArray[j]);
+      });
+    }(i));
+  };
+};
+
+var hideBigPicturePopUp = function () {
+  var userElement = document.querySelector('.big-picture');
+  userElement.classList.add('hidden');
+};
+
+var closePictureLinks = function () {
+  var bigPictureCansel = document.querySelector('.big-picture__cancel.cancel');
+  bigPictureCansel.addEventListener('click', function () {
+    hideBigPicturePopUp();
+  });
+};
+closePictureLinks();
+addClickHenderToShowBigPopUp();
