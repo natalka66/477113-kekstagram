@@ -113,17 +113,7 @@ var removeCountComments = function() {
   socialLoadmore.classList.add('visually-hidden');
 };
 
-var initializePictures = function(picturesArray) {
-  showThumbnails(picturesArray);
-  showBigPicture(picturesArray[0]);
-  removeCountComments();
-  // showBigPicturePopUp();
-};
-
-var picturesArray = createArray();
-initializePictures(picturesArray);
-
-var addClickHenderToShowBigPopUp = function () {
+var addClickHandlerToShowBigPopUp = function (picturesArray) {
   var picturesLinks = document.querySelectorAll('.picture__link');
   for (var i = 0; i < picturesLinks.length; i++) {
     (function (j) {
@@ -146,5 +136,87 @@ var closePictureLinks = function () {
     hideBigPicturePopUp();
   });
 };
-closePictureLinks();
-addClickHenderToShowBigPopUp();
+
+var addChangeHandlerToShowNewPhotoForm = function () {
+  var imgUpload = document.querySelector('#upload-file');
+  var imgUploadOverlay = document.querySelector('.img-upload__overlay');
+  imgUpload.addEventListener('change', function () {
+    imgUploadOverlay.classList.remove('hidden');
+  });
+}
+
+var closeImgUpLoad = function () {
+  var imgUpload = document.querySelector('#upload-file');
+  var imgUploadOverlay = document.querySelector('.img-upload__overlay');
+  var impUpLoadCansel = document.querySelector('.img-upload__cancel.cancel');
+  impUpLoadCansel.addEventListener('click', function () {
+    imgUploadOverlay.classList.add('hidden');
+    imgUpload.value = '';
+  });
+};
+
+// var scalePin = document.querySelector('.scale__pin');
+// document.addEventListener('mouseup', function (evt) {
+//   var scaleLine = document.querySelector('.scale__line');
+//   var scaleLineWidth =  scaleLine.clientWidth;
+//   var scaleLineX = scaleLine.getBoundingClientRect().x;
+//   var mouseUpX = evt.screenX;
+//   var percent = ((mouseUpX-scaleLineX)/scaleLineWidth)*100;
+//   console.log(percent);
+// })
+var imgUploadClassListRemove = function (imgUploadPreviw) {
+  imgUploadPreviw.classList.remove('effects__preview--heat');
+  imgUploadPreviw.classList.remove('effects__preview--chrome');
+  imgUploadPreviw.classList.remove('effects__preview--sepia');
+  imgUploadPreviw.classList.remove('effects__preview--marvin');
+  imgUploadPreviw.classList.remove('effects__preview--phobos');
+};
+
+var addEffects = function () {
+  var effectChrome = document.querySelector('#effect-chrome');
+  var imgUploadPreviw = document.querySelector('.img-upload__preview');
+  effectChrome.addEventListener('click', function () {
+    imgUploadClassListRemove(imgUploadPreviw);
+    imgUploadPreviw.classList.add('effects__preview--chrome');
+  });
+  var effectSepia = document.querySelector('#effect-sepia');
+  effectSepia.addEventListener('click', function () {
+    imgUploadClassListRemove(imgUploadPreviw);
+    imgUploadPreviw.classList.add('effects__preview--sepia');
+  });
+  var effectMarvin = document.querySelector('#effect-marvin');
+  effectMarvin.addEventListener('click', function () {
+    imgUploadClassListRemove(imgUploadPreviw);
+    imgUploadPreviw.classList.add('effects__preview--marvin');
+  });
+  var effectPhobos = document.querySelector('#effect-phobos');
+  effectPhobos.addEventListener('click', function () {
+    imgUploadClassListRemove(imgUploadPreviw);
+    imgUploadPreviw.classList.add('effects__preview--phobos');
+  });
+  var effectHeat = document.querySelector('#effect-heat');
+  effectHeat.addEventListener('click', function () {
+    imgUploadClassListRemove(imgUploadPreviw);
+    imgUploadPreviw.classList.add('effects__preview--heat');
+  });
+  var effectNone = document.querySelector('#effect-none');
+  effectNone.addEventListener('click', function () {
+    imgUploadClassListRemove(imgUploadPreviw);
+  });
+};
+
+var initializePictures = function() {
+  var picturesArray = createArray();
+  showThumbnails(picturesArray);
+  showBigPicture(picturesArray[0]);
+  removeCountComments();
+  addChangeHandlerToShowNewPhotoForm();
+  closeImgUpLoad();
+  addEffects();
+  closePictureLinks();
+  addClickHandlerToShowBigPopUp(picturesArray);
+  // showBigPicturePopUp();
+};
+
+
+initializePictures();
