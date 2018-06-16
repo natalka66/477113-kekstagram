@@ -68,18 +68,16 @@ var showThumbnails = function(picturesArray) {
   };
 };
 
-var showBigPicturePopUp = function () {
-  var userElement = document.querySelector('.big-picture');
-  userElement.classList.remove('hidden');
+var showBigPicture = function (picture, bigPictureElement) {
+  bigPictureElement.querySelector('.big-picture__img img').src = picture.url;
+  bigPictureElement.querySelector('.likes-count').textContent = picture.likes;
+  bigPictureElement.querySelector('.comments-count').textContent = picture.comments.length;
+  createAllComments(picture.comments);
+  bigPictureElement.querySelector('.social__caption').textContent = picture.description;
 };
 
-var showBigPicture = function (picture) {
-  var userElement = document.querySelector('.big-picture');
-  userElement.querySelector('.big-picture__img img').src = picture.url;
-  userElement.querySelector('.likes-count').textContent = picture.likes;
-  userElement.querySelector('.comments-count').textContent = picture.comments.length;
-  createAllComments(picture.comments);
-  userElement.querySelector('.social__caption').textContent = picture.description;
+var showBigPicturePopUp = function (bigPictureElement) {
+  bigPictureElement.classList.remove('hidden');
 };
 
 var createOneCommentElement = function(text) {
@@ -113,27 +111,28 @@ var removeCountComments = function() {
   socialLoadmore.classList.add('visually-hidden');
 };
 
-var addClickHandlerToShowBigPopUp = function (picturesArray) {
+var addClickHandlerToShowBigPicture = function (picturesLinks, i, bigPictureElement, picturesArray) {
+  picturesLinks[i].addEventListener('click', function () {
+    showBigPicturePopUp(bigPictureElement);
+    showBigPicture(picturesArray[i], bigPictureElement);
+  });
+};
+
+var addClickHandlerToShowBigPopUp = function (picturesArray, bigPictureElement) {
   var picturesLinks = document.querySelectorAll('.picture__link');
   for (var i = 0; i < picturesLinks.length; i++) {
-    (function (j) {
-      picturesLinks[j].addEventListener('click', function () {
-        showBigPicturePopUp();
-        showBigPicture(picturesArray[j]);
-      });
-    }(i));
+    addClickHandlerToShowBigPicture (picturesLinks, i, bigPictureElement, picturesArray);
   };
 };
 
-var hideBigPicturePopUp = function () {
-  var userElement = document.querySelector('.big-picture');
-  userElement.classList.add('hidden');
+var hideBigPicturePopUp = function (bigPictureElement) {
+  bigPictureElement.classList.add('hidden');
 };
 
-var closePictureLinks = function () {
+var closePictureLinks = function (bigPictureElement) {
   var bigPictureCansel = document.querySelector('.big-picture__cancel.cancel');
   bigPictureCansel.addEventListener('click', function () {
-    hideBigPicturePopUp();
+    hideBigPicturePopUp(bigPictureElement);
   });
 };
 
@@ -155,21 +154,11 @@ var closeImgUpLoad = function () {
   });
 };
 
-// var scalePin = document.querySelector('.scale__pin');
-// document.addEventListener('mouseup', function (evt) {
-//   var scaleLine = document.querySelector('.scale__line');
-//   var scaleLineWidth =  scaleLine.clientWidth;
-//   var scaleLineX = scaleLine.getBoundingClientRect().x;
-//   var mouseUpX = evt.screenX;
-//   var percent = ((mouseUpX-scaleLineX)/scaleLineWidth)*100;
-//   console.log(percent);
-// })
 var imgUploadClassListRemove = function (imgUploadPreviw) {
-  imgUploadPreviw.classList.remove('effects__preview--heat');
-  imgUploadPreviw.classList.remove('effects__preview--chrome');
-  imgUploadPreviw.classList.remove('effects__preview--sepia');
-  imgUploadPreviw.classList.remove('effects__preview--marvin');
-  imgUploadPreviw.classList.remove('effects__preview--phobos');
+  var effectsArray = ['effects__preview--heat', 'effects__preview--chrome', 'effects__preview--sepia', 'effects__preview--marvin', 'effects__preview--phobos'];
+  for (var i = 0; i < effectsArray.length; i++) {
+    imgUploadPreviw.classList.remove(effectsArray[i]);
+  };
 };
 
 var addEffects = function () {
@@ -206,16 +195,16 @@ var addEffects = function () {
 };
 
 var initializePictures = function() {
+  var bigPictureElement = document.querySelector('.big-picture');
   var picturesArray = createArray();
   showThumbnails(picturesArray);
-  showBigPicture(picturesArray[0]);
+  showBigPicture(picturesArray[0], bigPictureElement);
   removeCountComments();
   addChangeHandlerToShowNewPhotoForm();
   closeImgUpLoad();
   addEffects();
-  closePictureLinks();
-  addClickHandlerToShowBigPopUp(picturesArray);
-  // showBigPicturePopUp();
+  closePictureLinks(bigPictureElement);
+  addClickHandlerToShowBigPopUp(picturesArray, bigPictureElement);
 };
 
 
