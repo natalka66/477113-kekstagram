@@ -131,9 +131,8 @@ var hideBigPicturePopUp = function (bigPictureElement) {
   bigPictureElement.classList.add('hidden');
 };
 
-var closePictureLinks = function (bigPictureElement) {
-  var bigPictureCansel = document.querySelector('.big-picture__cancel.cancel');
-  bigPictureCansel.addEventListener('click', function () {
+var closePictureLinks = function (bigPictureElement, bigPictureCancel) {
+  bigPictureCancel.addEventListener('click', function () {
     hideBigPicturePopUp(bigPictureElement);
   });
 };
@@ -156,56 +155,45 @@ var closeImgUpLoad = function () {
   });
 };
 
-var imgUploadClassListRemove = function (imgUploadPreviw) {
+var imgUploadClassListRemove = function (imgUploadPreview) {
   var effectsArray = ['effects__preview--heat', 'effects__preview--chrome', 'effects__preview--sepia', 'effects__preview--marvin', 'effects__preview--phobos'];
   for (var i = 0; i < effectsArray.length; i++) {
-    imgUploadPreviw.classList.remove(effectsArray[i]);
+    imgUploadPreview.classList.remove(effectsArray[i]);
   }
 };
 
+var addEffectsgetSekectorAndClassList = function (effect, effectsPreview, imgUploadPreview) {
+  var effectStile = document.querySelector(effect);
+  effectStile.addEventListener('click', function () {
+    imgUploadClassListRemove(imgUploadPreview);
+    imgUploadPreview.classList.add(effectsPreview);
+  });
+};
+
 var addEffects = function () {
-  var effectChrome = document.querySelector('#effect-chrome');
-  var imgUploadPreviw = document.querySelector('.img-upload__preview');
-  effectChrome.addEventListener('click', function () {
-    imgUploadClassListRemove(imgUploadPreviw);
-    imgUploadPreviw.classList.add('effects__preview--chrome');
-  });
-  var effectSepia = document.querySelector('#effect-sepia');
-  effectSepia.addEventListener('click', function () {
-    imgUploadClassListRemove(imgUploadPreviw);
-    imgUploadPreviw.classList.add('effects__preview--sepia');
-  });
-  var effectMarvin = document.querySelector('#effect-marvin');
-  effectMarvin.addEventListener('click', function () {
-    imgUploadClassListRemove(imgUploadPreviw);
-    imgUploadPreviw.classList.add('effects__preview--marvin');
-  });
-  var effectPhobos = document.querySelector('#effect-phobos');
-  effectPhobos.addEventListener('click', function () {
-    imgUploadClassListRemove(imgUploadPreviw);
-    imgUploadPreviw.classList.add('effects__preview--phobos');
-  });
-  var effectHeat = document.querySelector('#effect-heat');
-  effectHeat.addEventListener('click', function () {
-    imgUploadClassListRemove(imgUploadPreviw);
-    imgUploadPreviw.classList.add('effects__preview--heat');
-  });
+  var imgUploadPreview = document.querySelector('.img-upload__preview');
+  addEffectsgetSekectorAndClassList('#effect-chrome', 'effects__preview--chrome', imgUploadPreview);
+  addEffectsgetSekectorAndClassList('#effect-sepia', 'effects__preview--sepia', imgUploadPreview);
+  addEffectsgetSekectorAndClassList('#effect-marvin', 'effects__preview--marvin', imgUploadPreview);
+  addEffectsgetSekectorAndClassList('#effect-phobos', 'effects__preview--phobos', imgUploadPreview);
+  addEffectsgetSekectorAndClassList('#effect-heat', 'effects__preview--heat', imgUploadPreview);
   var effectNone = document.querySelector('#effect-none');
   effectNone.addEventListener('click', function () {
-    imgUploadClassListRemove(imgUploadPreviw);
+    imgUploadClassListRemove(imgUploadPreview);
   });
 };
 
 var initializePictures = function () {
   var bigPictureElement = document.querySelector('.big-picture');
   var picturesArray = createArray();
+  var bigPictureCancel = document.querySelector('.big-picture__cancel.cancel');
   showThumbnails(picturesArray);
   showBigPicture(picturesArray[0], bigPictureElement);
   removeCountComments();
   addChangeHandlerToShowNewPhotoForm();
   closeImgUpLoad();
   addEffects();
-  closePictureLinks(bigPictureElement);
+  closePictureLinks(bigPictureElement, bigPictureCancel);
   addClickHandlerToShowBigPopUp(picturesArray, bigPictureElement);
 };
 
