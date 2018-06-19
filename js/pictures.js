@@ -3,6 +3,8 @@ var COMMENTS_FOR_FOTO = ['Всё отлично!', 'В целом всё неп�
 var DESCRIPTION = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!'];
 var MIN_LIKES_COUNT = 15;
 var MAX_LIKES_COUNT = 200;
+var MAX_HASH_TAG_COUNT = 5;
+var MAX_LENGTH_HASH_TAG = 20;
 
 var createArray = function () {
   var array = [];
@@ -257,10 +259,10 @@ var checkMistakeBetweenHashTagSpace = function (hashTagArray, textHashTagsSelect
 
 var checkMistakeUseJustOneHashTag = function (hashTagArray, textHashTagsSelector) {
   for (var i = 0; i < hashTagArray.length; i++) {
-    var hashtagI = hashTagArray[i];
-    for (var j = 0; j < hashTagArray.length; j++) {
-      var hashtagJ = hashTagArray[j];
-      if ((hashtagI === hashtagJ) && (i !== j)) {
+    var hashtag1 = hashTagArray[i];
+    for (var j = i; j < hashTagArray.length; j++) {
+      var hashtag2 = hashTagArray[j];
+      if ((hashtag1 === hashtag2) && (i !== j)) {
         textHashTagsSelector.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
       }
     }
@@ -268,14 +270,14 @@ var checkMistakeUseJustOneHashTag = function (hashTagArray, textHashTagsSelector
 };
 var checkMisstakeMaxFiveHashTag = function (hashTagArray, textHashTagsSelector) {
   var count = hashTagArray.length;
-  if (count > 5) {
+  if (count > MAX_HASH_TAG_COUNT) {
     textHashTagsSelector.setCustomValidity('Нельзя указать больше пяти хэш-тегов');
   }
 };
 
 var checkMistekeMaxCountHashTag = function (hashTagArray, textHashTagsSelector) {
   for (var i = 0; i < hashTagArray.length; i++) {
-    if (hashTagArray[i].length > 20) {
+    if (hashTagArray[i].length > MAX_LENGTH_HASH_TAG) {
       textHashTagsSelector.setCustomValidity('Максимальная длина одного хэш-тега 20 символов, включая решётку');
     }
   }
