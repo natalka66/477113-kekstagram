@@ -3,6 +3,8 @@ var COMMENTS_FOR_FOTO = ['Всё отлично!', 'В целом всё неп�
 var DESCRIPTION = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!'];
 var MIN_LIKES_COUNT = 15;
 var MAX_LIKES_COUNT = 200;
+var MAX_HASH_TAG_COUNT = 5;
+var MAX_LENGTH_HASH_TAG = 20;
 
 var createArray = function () {
   var array = [];
@@ -145,9 +147,8 @@ var addChangeHandlerToShowNewPhotoForm = function () {
   });
 };
 
-var closeImgUpLoad = function () {
+var closeImgUpLoad = function (imgUploadOverlay) {
   var imgUpload = document.querySelector('#upload-file');
-  var imgUploadOverlay = document.querySelector('.img-upload__overlay');
   var impUpLoadCansel = document.querySelector('.img-upload__cancel.cancel');
   impUpLoadCansel.addEventListener('click', function () {
     imgUploadOverlay.classList.add('hidden');
@@ -183,19 +184,123 @@ var addEffects = function () {
   });
 };
 
+var closeImgUpLoadKeydown = function (imgUploadOverlay) {
+  document.addEventListener('keydown', function (evt) {
+    var isHashTags = evt.target.classList.contains('text__hashtags');
+    var isTextDescription = (evt.target.classList.contains('text__description'));
+    if ((evt.keyCode === 27) && !(isHashTags) && !(isTextDescription)) {
+      imgUploadOverlay.classList.add('hidden');
+
+    }
+  });
+};
+
+// Валидация форм загрузки. Начало.
+
+var checkHashTag = function (textHashTagsSelector) {
+  textHashTagsSelector.addEventListener('input', function () {
+    textHashTagsSelector.setCustomValidity('');
+    var hashTagArray = getHashTagArray(textHashTagsSelector);
+    checkMistakeStartsOnlyPound(hashTagArray, textHashTagsSelector);
+    checkMistakeOnlyPound(hashTagArray, textHashTagsSelector);
+    checkMistakeBetweenHashTagSpace(hashTagArray, textHashTagsSelector);
+    checkMistakeUseJustOneHashTag(hashTagArray, textHashTagsSelector);
+    checkMisstakeMaxFiveHashTag(hashTagArray, textHashTagsSelector);
+    checkMistekeMaxCountHashTag(hashTagArray, textHashTagsSelector);
+  });
+};
+
+var getHashTagArray = function (textHashTagsSelector) {
+  var hashTagsString = textHashTagsSelector.value;
+  var hashTagArray = hashTagsString.split(' ');
+  hashTagArray = hashTagArray.filter(function (element) {
+    return element !== '';
+  });
+  hashTagArray = hashTagArray.map(function (element) {
+    return element.toLowerCase();
+  });
+  return hashTagArray;
+};
+
+var checkMistakeStartsOnlyPound = function (hashTagArray, textHashTagsSelector) {
+  for (var i = 0; i < hashTagArray.length; i++) {
+    var startsFromPound = (hashTagArray[i][0] !== '#');
+    if (startsFromPound) {
+      textHashTagsSelector.setCustomValidity('Хеш-тег должен начинаться с решетки');
+      return;
+    }
+  }
+};
+
+var checkMistakeOnlyPound = function (hashTagArray, textHashTagsSelector) {
+  for (var i = 0; i < hashTagArray.length; i++) {
+    var onlyPound = (hashTagArray[i] === '#');
+    if (onlyPound) {
+      textHashTagsSelector.setCustomValidity('Хеш-тег не должен содержать только решетку');
+      return;
+    }
+  }
+};
+
+var checkMistakeBetweenHashTagSpace = function (hashTagArray, textHashTagsSelector) {
+  for (var i = 0; i < hashTagArray.length; i++) {
+    var hashTag = hashTagArray[i];
+    var count = 0;
+    for (var j = 0; j < hashTag.length; j++) {
+      if (hashTag[j] === '#') {
+        count++;
+      }
+    }
+    if (count > 1) {
+      textHashTagsSelector.setCustomValidity('Хеш-теги должны разделяться пробелами');
+    }
+  }
+};
+
+var checkMistakeUseJustOneHashTag = function (hashTagArray, textHashTagsSelector) {
+  for (var i = 0; i < hashTagArray.length; i++) {
+    var hashtag1 = hashTagArray[i];
+    for (var j = i; j < hashTagArray.length; j++) {
+      var hashtag2 = hashTagArray[j];
+      if ((hashtag1 === hashtag2) && (i !== j)) {
+        textHashTagsSelector.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
+      }
+    }
+  }
+};
+var checkMisstakeMaxFiveHashTag = function (hashTagArray, textHashTagsSelector) {
+  var count = hashTagArray.length;
+  if (count > MAX_HASH_TAG_COUNT) {
+    textHashTagsSelector.setCustomValidity('Нельзя указать больше пяти хэш-тегов');
+  }
+};
+
+var checkMistekeMaxCountHashTag = function (hashTagArray, textHashTagsSelector) {
+  for (var i = 0; i < hashTagArray.length; i++) {
+    if (hashTagArray[i].length > MAX_LENGTH_HASH_TAG) {
+      textHashTagsSelector.setCustomValidity('Максимальная длина одного хэш-тега 20 символов, включая решётку');
+    }
+  }
+};
+
+// Валидация форм загрузки. Конец.
+
 var initializePictures = function () {
   var bigPictureElement = document.querySelector('.big-picture');
   var picturesArray = createArray();
   var bigPictureCancel = document.querySelector('.big-picture__cancel.cancel');
+  var imgUploadOverlay = document.querySelector('.img-upload__overlay');
+  var textHashTagsSelector = document.querySelector('.text__hashtags');
   showThumbnails(picturesArray);
   showBigPicture(picturesArray[0], bigPictureElement);
   removeCountComments();
   addChangeHandlerToShowNewPhotoForm();
-  closeImgUpLoad();
+  closeImgUpLoad(imgUploadOverlay);
   addEffects();
   closePictureLinks(bigPictureElement, bigPictureCancel);
   addClickHandlerToShowBigPopUp(picturesArray, bigPictureElement);
+  closeImgUpLoadKeydown(imgUploadOverlay);
+  checkHashTag(textHashTagsSelector);
 };
-
 
 initializePictures();
