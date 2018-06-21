@@ -168,6 +168,8 @@ var addEffectsgetSekectorAndClassList = function (effect, effectsPreview, imgUpl
   effectStile.addEventListener('click', function () {
     imgUploadClassListRemove(imgUploadPreview);
     imgUploadPreview.classList.add(effectsPreview);
+    var scale = document.querySelector('.img-upload__scale');
+    scale.classList.remove('hidden');
   });
 };
 
@@ -181,6 +183,15 @@ var addEffects = function () {
   var effectNone = document.querySelector('#effect-none');
   effectNone.addEventListener('click', function () {
     imgUploadClassListRemove(imgUploadPreview);
+  });
+};
+
+var showAndHideSlider = function () {
+  var effectNone = document.querySelector('#effect-none');
+  var scale = document.querySelector('.img-upload__scale');
+  scale.classList.add('hidden');
+  effectNone.addEventListener('click', function () {
+    scale.classList.add('hidden');
   });
 };
 
@@ -285,6 +296,64 @@ var checkMistekeMaxCountHashTag = function (hashTagArray, textHashTagsSelector) 
 
 // Валидация форм загрузки. Конец.
 
+// работа с пином. Начало.
+var changeFilter = function (percent) {
+  var effectPueview = document.querySelector('.img-upload__preview');
+  if (effectPueview.classList.contains('effects__preview--chrome')) {
+    effectPueview.style.filter = 'grayscale(' + percent + ')';
+  } else if (effectPueview.classList.contains('effects__preview--sepia')) {
+    effectPueview.style.filter = 'sepia(' + percent + ')';
+  } else if (effectPueview.classList.contains('effects__preview--marvin')) {
+    effectPueview.style.filter = 'invert(' + percent * 100 + '%)';
+  } else if (effectPueview.classList.contains('effects__preview--phobos')) {
+    effectPueview.style.filter = 'blur(' + percent * 3 + 'px)';
+  } else if (effectPueview.classList.contains('effects__preview--heat')) {
+    effectPueview.style.filter = 'brightness(' + ((percent * 2) + 1) + ')';
+  }
+};
+
+var movePin = function () {
+  var scalePin = document.querySelector('.scale__pin');
+  scalePin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+    var startCoords = {
+      x: evt.clientX
+    };
+    var onMouseMove = function (moveEvt) {
+      var shift = {
+        x: startCoords.x - moveEvt.clientX,
+      };
+      startCoords = {
+        x: moveEvt.clientX,
+      };
+      var findMaxAndMinX = function () {
+        var scaleLine = document.querySelector('.scale__line');
+        var coordXMin = scaleLine.getBoundingClientRect();
+        var minX = coordXMin.x;
+        var maxX = coordXMin.x + coordXMin.width;
+        return {minX: minX, maxX: maxX};
+      };
+      var minAndMaxX = findMaxAndMinX();
+      if ((startCoords.x > minAndMaxX.minX) && (startCoords.x < minAndMaxX.maxX)) {
+        scalePin.style.left = (scalePin.offsetLeft - shift.x) + 'px';
+        var percent = ((startCoords.x - minAndMaxX.minX) / (minAndMaxX.maxX - minAndMaxX.minX));
+        changeFilter(percent);
+        var scaleLevel = document.querySelector('.scale__level');
+        scaleLevel.style.width = ('' + percent * 100 + '%');
+      }
+    };
+    var mouseUp = function (upEvt) {
+      upEvt.preventDefault();
+
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', mouseUp);
+    };
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', mouseUp);
+  });
+};
+
+
 var initializePictures = function () {
   var bigPictureElement = document.querySelector('.big-picture');
   var picturesArray = createArray();
@@ -301,6 +370,8 @@ var initializePictures = function () {
   addClickHandlerToShowBigPopUp(picturesArray, bigPictureElement);
   closeImgUpLoadKeydown(imgUploadOverlay);
   checkHashTag(textHashTagsSelector);
+  movePin();
+  showAndHideSlider();
 };
 
 initializePictures();
