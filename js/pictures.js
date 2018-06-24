@@ -6,6 +6,7 @@ var MAX_LIKES_COUNT = 200;
 var MAX_HASH_TAG_COUNT = 5;
 var MAX_LENGTH_HASH_TAG = 20;
 
+// создает массив объектов, чтобы показать картинку, количество лайков, коментарии и подпись
 var createArray = function () {
   var array = [];
   for (var i = 0; i < 25; i++) {
@@ -19,16 +20,19 @@ var createArray = function () {
   return array;
 };
 
+// создает урл для аватарки
 var createUrl = function (i) {
   var stringUrl = 'photos/' + i + '.jpg';
   return stringUrl;
 };
 
+// функция случайным образом создает количество лайков от min до max
 var createLikes = function () {
   var likes = (randomNumber(MAX_LIKES_COUNT - MIN_LIKES_COUNT) + MIN_LIKES_COUNT);
   return likes;
 };
 
+// функция возвращате один случайно созданный комментарий
 var createOneComment = function (array) {
   var numberOfStrings = randomNumber(2) + 1;
   var stringComents;
@@ -40,6 +44,7 @@ var createOneComment = function (array) {
   return stringComents;
 };
 
+// возвращает случайное количество комментариев
 var createComments = function () {
   var array = [];
   for (var i = 0; i < randomNumber(6); i++) {
@@ -48,16 +53,19 @@ var createComments = function () {
   return array;
 };
 
+// получаем случайным образом подпись к фото
 var createDescription = function (array) {
   var stringDescription = array[randomNumber(array.length)];
   return stringDescription;
 };
 
+// функция возвращает случайное значение
 var randomNumber = function (i) {
   var number = Math.floor(Math.random() * i);
   return number;
 };
 
+// показывает маленькие картинки вокруг надписи кексограм
 var showThumbnails = function (picturesArray) {
   var templatePicture = document.querySelector('#picture').content.querySelector('.picture__link');
   var picturesContainer = document.querySelector('.pictures');
@@ -72,6 +80,7 @@ var showThumbnails = function (picturesArray) {
   }
 };
 
+// показывает картинку ближе при нажатии на нее
 var showBigPicture = function (picture, bigPictureElement) {
   bigPictureElement.querySelector('.big-picture__img img').src = picture.url;
   bigPictureElement.querySelector('.likes-count').textContent = picture.likes;
@@ -80,10 +89,12 @@ var showBigPicture = function (picture, bigPictureElement) {
   bigPictureElement.querySelector('.social__caption').textContent = picture.description;
 };
 
+// удаляет класс для показа картинки покрупнее
 var showBigPicturePopUp = function (bigPictureElement) {
   bigPictureElement.classList.remove('hidden');
 };
 
+// добавляет один коментарий с фото(случайным образом) и текстом, который я передам
 var createOneCommentElement = function (text) {
   var li = document.createElement('li');
   li.classList.add('social__comment');
@@ -102,12 +113,14 @@ var createOneCommentElement = function (text) {
   li.appendChild(span);
 };
 
+// цикл создает коментарии. Используем в другой функции, при нажатии на картинку и приближении ее
 var createAllComments = function (comments) {
   for (var i = 0; i < comments.length; i++) {
     createOneCommentElement(comments[i]);
   }
 };
 
+// скрываю количество коментариев и надпись "закрузить еще"
 var removeCountComments = function () {
   var socialComentCount = document.querySelector('.social__comment-count');
   socialComentCount.classList.add('visually-hidden');
@@ -115,6 +128,7 @@ var removeCountComments = function () {
   socialLoadmore.classList.add('visually-hidden');
 };
 
+// по клику покайзывется картинка т.е. навешивается обработчик
 var addClickHandlerToShowBigPicture = function (picturesLinks, i, bigPictureElement, picturesArray) {
   picturesLinks[i].addEventListener('click', function () {
     showBigPicturePopUp(bigPictureElement);
@@ -122,6 +136,7 @@ var addClickHandlerToShowBigPicture = function (picturesLinks, i, bigPictureElem
   });
 };
 
+// маленькие картинки перебирает в цикле и передаются для навешивания в обработчик
 var addClickHandlerToShowBigPopUp = function (picturesArray, bigPictureElement) {
   var picturesLinks = document.querySelectorAll('.picture__link');
   for (var i = 0; i < picturesLinks.length; i++) {
@@ -129,16 +144,19 @@ var addClickHandlerToShowBigPopUp = function (picturesArray, bigPictureElement) 
   }
 };
 
+// добавляю класс хиден и картинка скроется
 var hideBigPicturePopUp = function (bigPictureElement) {
   bigPictureElement.classList.add('hidden');
 };
 
+// добавляется обратчик и вызываю функцию для закрытия картинки
 var closePictureLinks = function (bigPictureElement, bigPictureCancel) {
   bigPictureCancel.addEventListener('click', function () {
     hideBigPicturePopUp(bigPictureElement);
   });
 };
 
+// показывает окно для добавления нового фото !!!
 var addChangeHandlerToShowNewPhotoForm = function () {
   var imgUpload = document.querySelector('#upload-file');
   var imgUploadOverlay = document.querySelector('.img-upload__overlay');
@@ -146,7 +164,7 @@ var addChangeHandlerToShowNewPhotoForm = function () {
     imgUploadOverlay.classList.remove('hidden');
   });
 };
-
+// закрытие окна с добавлением нового фото
 var closeImgUpLoad = function (imgUploadOverlay) {
   var imgUpload = document.querySelector('#upload-file');
   var impUpLoadCansel = document.querySelector('.img-upload__cancel.cancel');
@@ -156,6 +174,7 @@ var closeImgUpLoad = function (imgUploadOverlay) {
   });
 };
 
+// удаляю все эфекты (потому что нужно все убрать, а потом один добавить)
 var imgUploadClassListRemove = function (imgUploadPreview) {
   var effectsArray = ['effects__preview--heat', 'effects__preview--chrome', 'effects__preview--sepia', 'effects__preview--marvin', 'effects__preview--phobos'];
   for (var i = 0; i < effectsArray.length; i++) {
@@ -163,6 +182,7 @@ var imgUploadClassListRemove = function (imgUploadPreview) {
   }
 };
 
+// при нажатии на выбор эфекта, я сначала удаляю все эффекты, а потом добавляю один
 var addEffectsgetSekectorAndClassList = function (effect, effectsPreview, imgUploadPreview) {
   var effectStile = document.querySelector(effect);
   effectStile.addEventListener('click', function () {
@@ -173,6 +193,7 @@ var addEffectsgetSekectorAndClassList = function (effect, effectsPreview, imgUpl
   });
 };
 
+// добавляю эфект превью на один по клику
 var addEffects = function () {
   var imgUploadPreview = document.querySelector('.img-upload__preview');
   addEffectsgetSekectorAndClassList('#effect-chrome', 'effects__preview--chrome', imgUploadPreview);
@@ -186,6 +207,7 @@ var addEffects = function () {
   });
 };
 
+// на эфекте none слайдера быть не должно
 var showAndHideSlider = function () {
   var effectNone = document.querySelector('#effect-none');
   var scale = document.querySelector('.img-upload__scale');
@@ -195,6 +217,7 @@ var showAndHideSlider = function () {
   });
 };
 
+// закрытие окна если хеш-тег активен, то по esc окно не закрывается
 var closeImgUpLoadKeydown = function (imgUploadOverlay) {
   document.addEventListener('keydown', function (evt) {
     var isHashTags = evt.target.classList.contains('text__hashtags');
@@ -207,7 +230,7 @@ var closeImgUpLoadKeydown = function (imgUploadOverlay) {
 };
 
 // Валидация форм загрузки. Начало.
-
+// проверка на ошибки в хеш-тегах
 var checkHashTag = function (textHashTagsSelector) {
   textHashTagsSelector.addEventListener('input', function () {
     textHashTagsSelector.setCustomValidity('');
@@ -221,6 +244,8 @@ var checkHashTag = function (textHashTagsSelector) {
   });
 };
 
+// из input получаю строку с хеш-тегами, из это стрки делаю массив (split), убираю из массива пустые элементы
+// затем все буквы делаю маленькими и возвращаю массив хеш-теогов
 var getHashTagArray = function (textHashTagsSelector) {
   var hashTagsString = textHashTagsSelector.value;
   var hashTagArray = hashTagsString.split(' ');
@@ -233,6 +258,7 @@ var getHashTagArray = function (textHashTagsSelector) {
   return hashTagArray;
 };
 
+// проверка начинается только с #
 var checkMistakeStartsOnlyPound = function (hashTagArray, textHashTagsSelector) {
   for (var i = 0; i < hashTagArray.length; i++) {
     var startsFromPound = (hashTagArray[i][0] !== '#');
@@ -243,6 +269,7 @@ var checkMistakeStartsOnlyPound = function (hashTagArray, textHashTagsSelector) 
   }
 };
 
+// проверка, что не один смвол # в хеш-теге
 var checkMistakeOnlyPound = function (hashTagArray, textHashTagsSelector) {
   for (var i = 0; i < hashTagArray.length; i++) {
     var onlyPound = (hashTagArray[i] === '#');
@@ -253,6 +280,7 @@ var checkMistakeOnlyPound = function (hashTagArray, textHashTagsSelector) {
   }
 };
 
+// проверка что есть пробелы между хеш-тегом
 var checkMistakeBetweenHashTagSpace = function (hashTagArray, textHashTagsSelector) {
   for (var i = 0; i < hashTagArray.length; i++) {
     var hashTag = hashTagArray[i];
@@ -268,6 +296,7 @@ var checkMistakeBetweenHashTagSpace = function (hashTagArray, textHashTagsSelect
   }
 };
 
+// Один и тот же хэш-тег не может быть использован дважды
 var checkMistakeUseJustOneHashTag = function (hashTagArray, textHashTagsSelector) {
   for (var i = 0; i < hashTagArray.length; i++) {
     var hashtag1 = hashTagArray[i];
@@ -279,6 +308,8 @@ var checkMistakeUseJustOneHashTag = function (hashTagArray, textHashTagsSelector
     }
   }
 };
+
+// Нельзя указать больше пяти хэш-тегов
 var checkMisstakeMaxFiveHashTag = function (hashTagArray, textHashTagsSelector) {
   var count = hashTagArray.length;
   if (count > MAX_HASH_TAG_COUNT) {
@@ -286,6 +317,7 @@ var checkMisstakeMaxFiveHashTag = function (hashTagArray, textHashTagsSelector) 
   }
 };
 
+// Максимальная длина одного хэш-тега 20 символов, включая решётку'
 var checkMistekeMaxCountHashTag = function (hashTagArray, textHashTagsSelector) {
   for (var i = 0; i < hashTagArray.length; i++) {
     if (hashTagArray[i].length > MAX_LENGTH_HASH_TAG) {
@@ -297,6 +329,7 @@ var checkMistekeMaxCountHashTag = function (hashTagArray, textHashTagsSelector) 
 // Валидация форм загрузки. Конец.
 
 // работа с пином. Начало.
+// проверяем какой эфект активен и меняем эффект, в зависимости от того, в чем он "измеряетя"
 var changeFilter = function (percent) {
   var effectPueview = document.querySelector('.img-upload__preview');
   if (effectPueview.classList.contains('effects__preview--chrome')) {
@@ -312,6 +345,7 @@ var changeFilter = function (percent) {
   }
 };
 
+// движение пина
 var movePin = function () {
   var scalePin = document.querySelector('.scale__pin');
   scalePin.addEventListener('mousedown', function (evt) {
@@ -326,6 +360,7 @@ var movePin = function () {
       startCoords = {
         x: moveEvt.clientX,
       };
+      // находим пределы передвижения пина
       var findMaxAndMinX = function () {
         var scaleLine = document.querySelector('.scale__line');
         var coordXMin = scaleLine.getBoundingClientRect();
@@ -333,15 +368,17 @@ var movePin = function () {
         var maxX = coordXMin.x + coordXMin.width;
         return {minX: minX, maxX: maxX};
       };
+      // проверяем, чтобы пин был в нужных нам пределах, если да, то обновляем
       var minAndMaxX = findMaxAndMinX();
       if ((startCoords.x > minAndMaxX.minX) && (startCoords.x < minAndMaxX.maxX)) {
         scalePin.style.left = (scalePin.offsetLeft - shift.x) + 'px';
         var percent = ((startCoords.x - minAndMaxX.minX) / (minAndMaxX.maxX - minAndMaxX.minX));
         changeFilter(percent);
         var scaleLevel = document.querySelector('.scale__level');
-        scaleLevel.style.width = ('' + percent * 100 + '%');
+        scaleLevel.style.width = ('' + percent * 100 + '%'); // красим желтую
       }
     };
+    // удаляю все обработчики событий
     var mouseUp = function (upEvt) {
       upEvt.preventDefault();
 
