@@ -24,22 +24,7 @@
     var photoForm = document.querySelector('.img-upload__form');
     photoForm.addEventListener('submit', function (evt) {
       evt.preventDefault();
-      var formData = new FormData();
-      var inputTextHashtags = document.querySelector('.text__hashtags');
-      var textHashtags = inputTextHashtags.value;
-      var textAreaTextDescription = document.querySelector('.text__description');
-      var textDescription = textAreaTextDescription.value;
-      var scaleValue = document.querySelector('.scale__value');
-      var percent = scaleValue.value;
-      var inputEffectsRadio = document.querySelector('.effects__radio');
-      var effectRadio = inputEffectsRadio.value;
-      var inputImpUpload = document.querySelector('.img-upload__input');
-      var fileName = inputImpUpload.value;
-      formData.append('hashtags', textHashtags);
-      formData.append('description', textDescription);
-      formData.append('scale', percent);
-      formData.append('effect', effectRadio);
-      formData.append('filename', fileName);
+      var formData = new FormData(photoForm);
       window.backend.save(formData, function () {
         window.closeImgUpLoad();
       }, function (error) {
