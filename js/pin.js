@@ -49,6 +49,8 @@
           changeFilter(percent);
           var scaleLevel = document.querySelector('.scale__level');
           scaleLevel.style.width = ('' + percent * 100 + '%'); // красим желтую
+          var scaleValue = document.querySelector('.scale__value');
+          scaleValue.value = percent * 100;
         }
       };
       // удаляю все обработчики событий

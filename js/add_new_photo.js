@@ -19,6 +19,23 @@
     });
   };
 
+  // функция отправки формы измененной фотографии на север
+  var sendNewPhoto = function () {
+    var photoForm = document.querySelector('.img-upload__form');
+    photoForm.addEventListener('submit', function (evt) {
+      evt.preventDefault();
+      var formData = new FormData(photoForm);
+      window.backend.save(formData, function () {
+        window.closeImgUpLoad();
+      }, function (error) {
+        var div = document.createElement('div');
+        div.textContent = error;
+        var impUploadText = document.querySelector('.img-upload__text');
+        impUploadText.appendChild(div);
+      });
+    });
+  };
+
   // удаляю все эфекты (потому что нужно все убрать, а потом один добавить)
   var imgUploadClassListRemove = function (imgUploadPreview) {
     var effectsArray = ['effects__preview--heat', 'effects__preview--chrome', 'effects__preview--sepia', 'effects__preview--marvin', 'effects__preview--phobos'];
@@ -80,6 +97,7 @@
     addEffects();
     closeImgUpLoadKeydown(imgUploadOverlay);
     showAndHideSlider();
+    sendNewPhoto();
   };
 })();
 
