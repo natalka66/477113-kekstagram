@@ -9,6 +9,10 @@
 
   // показывает маленькие картинки вокруг надписи кексограм
   var showThumbnails = function (picturesArray) {
+    var pictureLink = document.querySelectorAll('.picture__link');
+    for (var j = 0; j < pictureLink.length; j++) { // удаляем предыдущие фото
+      pictureLink[j].parentElement.removeChild(pictureLink[j]);
+    }
     var templatePicture = document.querySelector('#picture').content.querySelector('.picture__link');
     var picturesContainer = document.querySelector('.pictures');
     for (var i = 0; i < picturesArray.length; i++) {
@@ -97,22 +101,88 @@
     });
   };
 
+  // после завершения загрузки фото с сервера
+  var addClassFilter = function () {
+    var imgFiltres = document.querySelector('.img-filters');
+    imgFiltres.classList.remove('img-filters--inactive');
+  };
+  // функция показывает, что кнопка активна. Выделяется белым.
+  var removeActivFilter = function (activeButton) {
+    var filterDiscussed = document.querySelector('#filter-discussed');
+    var filterNew = document.querySelector('#filter-new');
+    var filterPopular = document.querySelector('#filter-popular');
+    filterDiscussed.classList.remove('img-filters__button--active');
+    filterNew.classList.remove('img-filters__button--active');
+    filterPopular.classList.remove('img-filters__button--active');
+    activeButton.classList.add('img-filters__button--active');
+  };
+
+  // показ популярных фото по кнопке
+  var showPopularPhoto = function (originPhotoArray, bigPictureElement) {
+    var filterPopular = document.querySelector('#filter-popular');
+    filterPopular.addEventListener('click', function () {
+      window.debounce(function () {
+        removeActivFilter(filterPopular);
+        var popularArray = [].concat(originPhotoArray);
+        showThumbnails(popularArray);
+        addClickHandlerToShowBigPopUp(popularArray, bigPictureElement);
+      });
+    });
+  };
+
+  // показ новых фото по кнопке
+  var showNewPhoto = function (originPhotoArray, bigPictureElement) {
+    var filterNew = document.querySelector('#filter-new');
+    var newPhotoArray = [];
+    var newArray = [].concat(originPhotoArray);
+    for (var i = 0; i < 9; i++) {
+      var randomI = randomNumber(newArray.length);
+      newPhotoArray.push(newArray[randomI]);
+      newArray.splice(randomI, 1);
+    }
+    filterNew.addEventListener('click', function () {
+      window.debounce(function () {
+        removeActivFilter(filterNew);
+        showThumbnails(newPhotoArray);
+        addClickHandlerToShowBigPopUp(newPhotoArray, bigPictureElement);
+      });
+    });
+  };
+
+  // показ фото по популярности, сортируем по количеству коментариев
+  var showPhotoMaxToMinComents = function (originPhotoArray, bigPictureElement) {
+    var filterDiscussed = document.querySelector('#filter-discussed');
+    var discussedArray = [].concat(originPhotoArray);
+    discussedArray.sort(function (photo1, photo2) {
+      return photo2.comments.length - photo1.comments.length;
+    });
+    filterDiscussed.addEventListener('click', function () {
+      window.debounce(function () {
+        removeActivFilter(filterDiscussed);
+        showThumbnails(discussedArray);
+        addClickHandlerToShowBigPopUp(discussedArray, bigPictureElement);
+      });
+    });
+  };
+
   window.initializeThumbnailsAndPopup = function () {
-    window.backend.load(function (text) {
-      showThumbnails(text);
+    window.backend.load(function (originPhotoArray) {
+      var bigPictureElement = document.querySelector('.big-picture');
+      var bigPictureCancel = document.querySelector('.big-picture__cancel.cancel');
+      showThumbnails(originPhotoArray);
       removeCountComments();
       closePictureLinks(bigPictureElement, bigPictureCancel);
-      addClickHandlerToShowBigPopUp(text, bigPictureElement);
+      addClickHandlerToShowBigPopUp(originPhotoArray, bigPictureElement);
+      addClassFilter();
+      showPopularPhoto(originPhotoArray, bigPictureElement);
+      showNewPhoto(originPhotoArray, bigPictureElement);
+      showPhotoMaxToMinComents(originPhotoArray, bigPictureElement);
     }, function (error) {
       var pictureContainer = document.querySelector('.pictures.container');
       var div = document.createElement('div');
       div.textContent = error;
       pictureContainer.appendChild(div);
     });
-
-    var bigPictureElement = document.querySelector('.big-picture');
-    var bigPictureCancel = document.querySelector('.big-picture__cancel.cancel');
-
   };
 })();
 
