@@ -8,6 +8,7 @@
   // проверка на ошибки в хеш-тегах
   var checkHashTag = function (textHashTagsSelector) {
     textHashTagsSelector.addEventListener('input', function () {
+      textHashTagsSelector.style.borderColor = '';
       textHashTagsSelector.setCustomValidity('');
       var hashTagArray = getHashTagArray(textHashTagsSelector);
       checkMistakeStartsOnlyPound(hashTagArray, textHashTagsSelector);
@@ -16,6 +17,9 @@
       checkMistakeUseJustOneHashTag(hashTagArray, textHashTagsSelector);
       checkMisstakeMaxFiveHashTag(hashTagArray, textHashTagsSelector);
       checkMistekeMaxCountHashTag(hashTagArray, textHashTagsSelector);
+    });
+    textHashTagsSelector.addEventListener('invalid', function () {
+      textHashTagsSelector.style.borderColor = 'red';
     });
   };
 

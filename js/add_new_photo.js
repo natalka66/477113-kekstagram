@@ -9,13 +9,20 @@
       imgUploadOverlay.classList.remove('hidden');
     });
   };
-  // закрытие окна с добавлением нового фото
-  var closeImgUpLoad = function (imgUploadOverlay) {
+
+  // функция закрытия окна на при нажатии на отправить
+  var closeAftreSave = function () {
     var imgUpload = document.querySelector('#upload-file');
+    var imgUploadOverlay = document.querySelector('.img-upload__overlay');
+    imgUploadOverlay.classList.add('hidden');
+    imgUpload.value = '';
+  };
+
+  // закрытие окна с добавлением нового фото
+  var closeImgUpLoad = function () {
     var impUpLoadCansel = document.querySelector('.img-upload__cancel.cancel');
     impUpLoadCansel.addEventListener('click', function () {
-      imgUploadOverlay.classList.add('hidden');
-      imgUpload.value = '';
+      closeAftreSave();
     });
   };
 
@@ -26,7 +33,7 @@
       evt.preventDefault();
       var formData = new FormData(photoForm);
       window.backend.save(formData, function () {
-        window.closeImgUpLoad();
+        closeAftreSave();
       }, function (error) {
         var div = document.createElement('div');
         div.textContent = error;
@@ -114,7 +121,7 @@
   window.addNewPhoto = function () {
     var imgUploadOverlay = document.querySelector('.img-upload__overlay');
     addChangeHandlerToShowNewPhotoForm();
-    closeImgUpLoad(imgUploadOverlay);
+    closeImgUpLoad();
     addEffects();
     closeImgUpLoadKeydown(imgUploadOverlay);
     showAndHideSlider();
