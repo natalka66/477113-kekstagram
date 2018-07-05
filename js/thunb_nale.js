@@ -121,10 +121,12 @@
   var showPopularPhoto = function (originPhotoArray, bigPictureElement) {
     var filterPopular = document.querySelector('#filter-popular');
     filterPopular.addEventListener('click', function () {
-      removeActivFilter(filterPopular);
-      var popularArray = [].concat(originPhotoArray);
-      showThumbnails(popularArray);
-      addClickHandlerToShowBigPopUp(popularArray, bigPictureElement);
+      window.debounce(function () {
+        removeActivFilter(filterPopular);
+        var popularArray = [].concat(originPhotoArray);
+        showThumbnails(popularArray);
+        addClickHandlerToShowBigPopUp(popularArray, bigPictureElement);
+      });
     });
   };
 
@@ -139,9 +141,11 @@
       newArray.splice(randomI, 1);
     }
     filterNew.addEventListener('click', function () {
-      removeActivFilter(filterNew);
-      showThumbnails(newPhotoArray);
-      addClickHandlerToShowBigPopUp(newPhotoArray, bigPictureElement);
+      window.debounce(function () {
+        removeActivFilter(filterNew);
+        showThumbnails(newPhotoArray);
+        addClickHandlerToShowBigPopUp(newPhotoArray, bigPictureElement);
+      });
     });
   };
 
@@ -153,9 +157,11 @@
       return photo2.comments.length - photo1.comments.length;
     });
     filterDiscussed.addEventListener('click', function () {
-      removeActivFilter(filterDiscussed);
-      showThumbnails(discussedArray);
-      addClickHandlerToShowBigPopUp(discussedArray, bigPictureElement);
+      window.debounce(function () {
+        removeActivFilter(filterDiscussed);
+        showThumbnails(discussedArray);
+        addClickHandlerToShowBigPopUp(discussedArray, bigPictureElement);
+      });
     });
   };
 
