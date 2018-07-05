@@ -90,6 +90,27 @@
       }
     });
   };
+
+  // добавляю приближение и удаление фото
+  var plusAndMinus = function () {
+    var controlMinus = document.querySelector('.resize__control--minus');
+    var controlPlus = document.querySelector('.resize__control--plus');
+    var uploadPreview = document.querySelector('.img-upload__preview');
+    var reasizeControlValue = document.querySelector('.resize__control--value');
+    reasizeControlValue.value = '100%';
+    var scale = 1;
+    controlMinus.addEventListener('click', function () {
+      scale = Math.max(0.25, scale - 0.25);
+      uploadPreview.style.transform = 'scale(' + scale + ')';
+      reasizeControlValue.value = scale * 100 + '%';
+    });
+    controlPlus.addEventListener('click', function () {
+      scale = Math.min(1, scale + 0.25);
+      uploadPreview.style.transform = 'scale(' + scale + ')';
+      reasizeControlValue.value = scale * 100 + '%';
+    });
+  };
+
   window.addNewPhoto = function () {
     var imgUploadOverlay = document.querySelector('.img-upload__overlay');
     addChangeHandlerToShowNewPhotoForm();
@@ -98,6 +119,7 @@
     closeImgUpLoadKeydown(imgUploadOverlay);
     showAndHideSlider();
     sendNewPhoto();
+    plusAndMinus();
   };
 })();
 
