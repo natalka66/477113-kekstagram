@@ -10,12 +10,21 @@
     });
   };
 
-  // функция закрытия окна на при нажатии на отправить
+  // функция закрытия окна на при нажатии на отправить, при этом нужно сбросить все настройки из памяти
+  // например масштаб или эфеект
   var closeAftreSave = function () {
     var imgUpload = document.querySelector('#upload-file');
     var imgUploadOverlay = document.querySelector('.img-upload__overlay');
     imgUploadOverlay.classList.add('hidden');
     imgUpload.value = '';
+    var imgUploadPreview = document.querySelector('.img-upload__preview');
+    imgUploadClassListRemove(imgUploadPreview);
+    var scale = document.querySelector('.img-upload__scale');
+    scale.classList.add('hidden');
+    var uploadPreview = document.querySelector('.img-upload__preview');
+    var reasizeControlValue = document.querySelector('.resize__control--value');
+    uploadPreview.style.transform = 'scale(1)';
+    reasizeControlValue.value = '100%';
   };
 
   // закрытие окна с добавлением нового фото
