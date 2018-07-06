@@ -9,13 +9,29 @@
       imgUploadOverlay.classList.remove('hidden');
     });
   };
-  // закрытие окна с добавлением нового фото
-  var closeImgUpLoad = function (imgUploadOverlay) {
+
+  // функция закрытия окна на при нажатии на отправить, при этом нужно сбросить все настройки из памяти
+  // например масштаб или эфеект
+  var closeAftreSave = function () {
     var imgUpload = document.querySelector('#upload-file');
+    var imgUploadOverlay = document.querySelector('.img-upload__overlay');
+    imgUploadOverlay.classList.add('hidden');
+    imgUpload.value = '';
+    var imgUploadPreview = document.querySelector('.img-upload__preview');
+    imgUploadClassListRemove(imgUploadPreview);
+    var scale = document.querySelector('.img-upload__scale');
+    scale.classList.add('hidden');
+    var uploadPreview = document.querySelector('.img-upload__preview');
+    var reasizeControlValue = document.querySelector('.resize__control--value');
+    uploadPreview.style.transform = 'scale(1)';
+    reasizeControlValue.value = '100%';
+  };
+
+  // закрытие окна с добавлением нового фото
+  var closeImgUpLoad = function () {
     var impUpLoadCansel = document.querySelector('.img-upload__cancel.cancel');
     impUpLoadCansel.addEventListener('click', function () {
-      imgUploadOverlay.classList.add('hidden');
-      imgUpload.value = '';
+      closeAftreSave();
     });
   };
 
@@ -26,7 +42,7 @@
       evt.preventDefault();
       var formData = new FormData(photoForm);
       window.backend.save(formData, function () {
-        window.closeImgUpLoad();
+        closeAftreSave();
       }, function (error) {
         var div = document.createElement('div');
         div.textContent = error;
@@ -90,14 +106,36 @@
       }
     });
   };
+
+  // добавляю приближение и удаление фото
+  var plusAndMinus = function () {
+    var controlMinus = document.querySelector('.resize__control--minus');
+    var controlPlus = document.querySelector('.resize__control--plus');
+    var uploadPreview = document.querySelector('.img-upload__preview');
+    var reasizeControlValue = document.querySelector('.resize__control--value');
+    reasizeControlValue.value = '100%';
+    var scale = 1;
+    controlMinus.addEventListener('click', function () {
+      scale = Math.max(0.25, scale - 0.25);
+      uploadPreview.style.transform = 'scale(' + scale + ')';
+      reasizeControlValue.value = scale * 100 + '%';
+    });
+    controlPlus.addEventListener('click', function () {
+      scale = Math.min(1, scale + 0.25);
+      uploadPreview.style.transform = 'scale(' + scale + ')';
+      reasizeControlValue.value = scale * 100 + '%';
+    });
+  };
+
   window.addNewPhoto = function () {
     var imgUploadOverlay = document.querySelector('.img-upload__overlay');
     addChangeHandlerToShowNewPhotoForm();
-    closeImgUpLoad(imgUploadOverlay);
+    closeImgUpLoad();
     addEffects();
     closeImgUpLoadKeydown(imgUploadOverlay);
     showAndHideSlider();
     sendNewPhoto();
+    plusAndMinus();
   };
 })();
 

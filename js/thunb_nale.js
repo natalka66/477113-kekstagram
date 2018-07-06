@@ -32,6 +32,7 @@
     bigPictureElement.querySelector('.likes-count').textContent = picture.likes;
     bigPictureElement.querySelector('.comments-count').textContent = picture.comments.length;
     createAllComments(picture.comments);
+    document.body.classList.add('modal-open');
   };
 
   // удаляет класс для показа картинки покрупнее
@@ -59,8 +60,9 @@
   };
 
   // цикл создает коментарии. Используем в другой функции, при нажатии на картинку и приближении ее
+  // в цикле ограничитель, не более 5 коментариев
   var createAllComments = function (comments) {
-    for (var i = 0; i < comments.length; i++) {
+    for (var i = 0; i < Math.min(comments.length, 5); i++) {
       createOneCommentElement(comments[i]);
     }
   };
@@ -90,8 +92,14 @@
   };
 
   // добавляю класс хиден и картинка скроется
+  // удаляем старые коментарии у фото
   var hideBigPicturePopUp = function (bigPictureElement) {
     bigPictureElement.classList.add('hidden');
+    var socialComment = document.querySelectorAll('.social__comment');
+    for (var i = 0; i < socialComment.length; i++) {
+      socialComment[i].parentElement.removeChild(socialComment[i]);
+    }
+    document.body.classList.remove('modal-open');
   };
 
   // добавляется обратчик и вызываю функцию для закрытия картинки
