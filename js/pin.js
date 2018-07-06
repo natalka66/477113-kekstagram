@@ -18,6 +18,29 @@
     }
   };
 
+  // находим пределы передвижения пина
+  var findMaxAndMinX = function () {
+    var scaleLine = document.querySelector('.scale__line');
+    var coordXMin = scaleLine.getBoundingClientRect();
+    var minX = coordXMin.x;
+    var maxX = coordXMin.x + coordXMin.width;
+    return {minX: minX, maxX: maxX};
+  };
+
+  // проверяем, чтобы пин был в нужных нам пределах, если да, то обновляем
+  var checkMinAndMaxPin = function (startCoords, scalePin, shift) {
+    var minAndMaxX = findMaxAndMinX();
+    if ((startCoords.x > minAndMaxX.minX) && (startCoords.x < minAndMaxX.maxX)) {
+      scalePin.style.left = (scalePin.offsetLeft - shift.x) + 'px';
+      var percent = ((startCoords.x - minAndMaxX.minX) / (minAndMaxX.maxX - minAndMaxX.minX));
+      changeFilter(percent);
+      var scaleLevel = document.querySelector('.scale__level');
+      scaleLevel.style.width = ('' + percent * 100 + '%'); // красим желтую
+      var scaleValue = document.querySelector('.scale__value');
+      scaleValue.value = percent * 100;
+    }
+  };
+
   // движение пина
   var movePin = function () {
     var scalePin = document.querySelector('.scale__pin');
@@ -33,25 +56,7 @@
         startCoords = {
           x: moveEvt.clientX,
         };
-        // находим пределы передвижения пина
-        var findMaxAndMinX = function () {
-          var scaleLine = document.querySelector('.scale__line');
-          var coordXMin = scaleLine.getBoundingClientRect();
-          var minX = coordXMin.x;
-          var maxX = coordXMin.x + coordXMin.width;
-          return {minX: minX, maxX: maxX};
-        };
-        // проверяем, чтобы пин был в нужных нам пределах, если да, то обновляем
-        var minAndMaxX = findMaxAndMinX();
-        if ((startCoords.x > minAndMaxX.minX) && (startCoords.x < minAndMaxX.maxX)) {
-          scalePin.style.left = (scalePin.offsetLeft - shift.x) + 'px';
-          var percent = ((startCoords.x - minAndMaxX.minX) / (minAndMaxX.maxX - minAndMaxX.minX));
-          changeFilter(percent);
-          var scaleLevel = document.querySelector('.scale__level');
-          scaleLevel.style.width = ('' + percent * 100 + '%'); // красим желтую
-          var scaleValue = document.querySelector('.scale__value');
-          scaleValue.value = percent * 100;
-        }
+        checkMinAndMaxPin(startCoords, scalePin, shift);
       };
       // удаляю все обработчики событий
       var mouseUp = function (upEvt) {
