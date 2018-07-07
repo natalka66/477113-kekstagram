@@ -28,10 +28,10 @@
   };
 
   // проверяем, чтобы пин был в нужных нам пределах, если да, то обновляем
-  var checkMinAndMaxPin = function (startCoords, scalePin, shift) {
+  var checkMinAndMaxPin = function (startCoords, scalePin) {
     var minAndMaxX = findMaxAndMinX();
     if ((startCoords.x > minAndMaxX.minX) && (startCoords.x < minAndMaxX.maxX)) {
-      scalePin.style.left = (scalePin.offsetLeft - shift.x) + 'px';
+      scalePin.style.left = (startCoords.x - minAndMaxX.minX) + 'px';
       var percent = ((startCoords.x - minAndMaxX.minX) / (minAndMaxX.maxX - minAndMaxX.minX));
       changeFilter(percent);
       var scaleLevel = document.querySelector('.scale__level');
@@ -50,13 +50,10 @@
         x: evt.clientX
       };
       var onMouseMove = function (moveEvt) {
-        var shift = {
-          x: startCoords.x - moveEvt.clientX,
-        };
         startCoords = {
           x: moveEvt.clientX,
         };
-        checkMinAndMaxPin(startCoords, scalePin, shift);
+        checkMinAndMaxPin(startCoords, scalePin);
       };
       // удаляю все обработчики событий
       var mouseUp = function (upEvt) {
