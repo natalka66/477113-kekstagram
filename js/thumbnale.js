@@ -109,6 +109,16 @@
     });
   };
 
+  // закрытие окна при нажатии клавиши esc
+  var closePictureEsc = function () {
+    var bigPicture = document.querySelector('.big-picture');
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === 27) {
+        bigPicture.classList.add('hidden');
+      }
+    });
+  };
+
   // после завершения загрузки фото с сервера
   var addClassFilter = function () {
     var imgFiltres = document.querySelector('.img-filters');
@@ -175,6 +185,7 @@
 
   window.initializeThumbnailsAndPopup = function () {
     window.backend.load(function (originPhoto) {
+      closePictureEsc();
       var bigPictureElement = document.querySelector('.big-picture');
       var bigPictureCancel = document.querySelector('.big-picture__cancel.cancel');
       showThumbnails(originPhoto);
