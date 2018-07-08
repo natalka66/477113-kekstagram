@@ -12,7 +12,7 @@
 
   // функция закрытия окна на при нажатии на отправить, при этом нужно сбросить все настройки из памяти
   // например масштаб или эфеект
-  var closeAftreSave = function () {
+  var closeAfterSave = function () {
     var imgUpload = document.querySelector('#upload-file');
     var imgUploadOverlay = document.querySelector('.img-upload__overlay');
     imgUploadOverlay.classList.add('hidden');
@@ -25,13 +25,18 @@
     var reasizeControlValue = document.querySelector('.resize__control--value');
     uploadPreview.style.transform = 'scale(1)';
     reasizeControlValue.value = '100%';
+    var textHashtags = document.querySelector('.text__hashtags');
+    var textDescription = document.querySelector('.text__description');
+    textHashtags.value = '';
+    textDescription.value = '';
+    imgUploadPreview.style.filter = '';
   };
 
   // закрытие окна с добавлением нового фото
   var closeImgUpLoad = function () {
     var impUpLoadCansel = document.querySelector('.img-upload__cancel.cancel');
     impUpLoadCansel.addEventListener('click', function () {
-      closeAftreSave();
+      closeAfterSave();
     });
   };
 
@@ -42,7 +47,7 @@
       evt.preventDefault();
       var formData = new FormData(photoForm);
       window.backend.save(formData, function () {
-        closeAftreSave();
+        closeAfterSave();
       }, function (error) {
         var element = document.createElement('element');
         element.textContent = error;
@@ -84,6 +89,7 @@
     var effectNone = document.querySelector('#effect-none');
     effectNone.addEventListener('click', function () {
       imgUploadClassListRemove(imgUploadPreview);
+      imgUploadPreview.style.filter = '';
     });
   };
 
