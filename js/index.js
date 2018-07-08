@@ -3,6 +3,6 @@ var main = function () {
   window.addNewPhoto();
   window.initializeThumbnailsAndPopup();
   window.uploadFormValidation();
-  window.changeFiltrAndMovePin();
+  window.changeFilterAndMovePin();
 };
 main();

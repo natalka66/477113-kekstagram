@@ -44,41 +44,43 @@
       window.backend.save(formData, function () {
         closeAftreSave();
       }, function (error) {
-        var div = document.createElement('div');
-        div.textContent = error;
+        var element = document.createElement('element');
+        element.textContent = error;
         var impUploadText = document.querySelector('.img-upload__text');
-        impUploadText.appendChild(div);
+        impUploadText.appendChild(element);
       });
     });
   };
 
   // удаляю все эфекты (потому что нужно все убрать, а потом один добавить)
   var imgUploadClassListRemove = function (imgUploadPreview) {
-    var effectsArray = ['effects__preview--heat', 'effects__preview--chrome', 'effects__preview--sepia', 'effects__preview--marvin', 'effects__preview--phobos'];
-    for (var i = 0; i < effectsArray.length; i++) {
-      imgUploadPreview.classList.remove(effectsArray[i]);
+    var effects = ['effects__preview--heat', 'effects__preview--chrome', 'effects__preview--sepia', 'effects__preview--marvin', 'effects__preview--phobos'];
+    for (var i = 0; i < effects.length; i++) {
+      imgUploadPreview.classList.remove(effects[i]);
     }
   };
 
   // при нажатии на выбор эфекта, я сначала удаляю все эффекты, а потом добавляю один
-  var addEffectsgetSekectorAndClassList = function (effect, effectsPreview, imgUploadPreview) {
-    var effectStile = document.querySelector(effect);
-    effectStile.addEventListener('click', function () {
+  var addEffectEventHandler = function (effect, effectsPreview, imgUploadPreview) {
+    var effectStyle = document.querySelector(effect);
+    effectStyle.addEventListener('click', function () {
       imgUploadClassListRemove(imgUploadPreview);
       imgUploadPreview.classList.add(effectsPreview);
       var scale = document.querySelector('.img-upload__scale');
       scale.classList.remove('hidden');
+      window.changeFilter(1);
+      window.movePinOnMax();
     });
   };
 
   // добавляю эфект превью на один по клику
   var addEffects = function () {
     var imgUploadPreview = document.querySelector('.img-upload__preview');
-    addEffectsgetSekectorAndClassList('#effect-chrome', 'effects__preview--chrome', imgUploadPreview);
-    addEffectsgetSekectorAndClassList('#effect-sepia', 'effects__preview--sepia', imgUploadPreview);
-    addEffectsgetSekectorAndClassList('#effect-marvin', 'effects__preview--marvin', imgUploadPreview);
-    addEffectsgetSekectorAndClassList('#effect-phobos', 'effects__preview--phobos', imgUploadPreview);
-    addEffectsgetSekectorAndClassList('#effect-heat', 'effects__preview--heat', imgUploadPreview);
+    addEffectEventHandler('#effect-chrome', 'effects__preview--chrome', imgUploadPreview);
+    addEffectEventHandler('#effect-sepia', 'effects__preview--sepia', imgUploadPreview);
+    addEffectEventHandler('#effect-marvin', 'effects__preview--marvin', imgUploadPreview);
+    addEffectEventHandler('#effect-phobos', 'effects__preview--phobos', imgUploadPreview);
+    addEffectEventHandler('#effect-heat', 'effects__preview--heat', imgUploadPreview);
     var effectNone = document.querySelector('#effect-none');
     effectNone.addEventListener('click', function () {
       imgUploadClassListRemove(imgUploadPreview);
@@ -108,7 +110,7 @@
   };
 
   // добавляю приближение и удаление фото
-  var plusAndMinus = function () {
+  var addPlusAndMinusEventListener = function () {
     var controlMinus = document.querySelector('.resize__control--minus');
     var controlPlus = document.querySelector('.resize__control--plus');
     var uploadPreview = document.querySelector('.img-upload__preview');
@@ -135,7 +137,7 @@
     closeImgUpLoadKeydown(imgUploadOverlay);
     showAndHideSlider();
     sendNewPhoto();
-    plusAndMinus();
+    addPlusAndMinusEventListener();
   };
 })();
 

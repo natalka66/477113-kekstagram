@@ -10,13 +10,13 @@
     textHashTagsSelector.addEventListener('input', function () {
       textHashTagsSelector.style.borderColor = '';
       textHashTagsSelector.setCustomValidity('');
-      var hashTagArray = getHashTagArray(textHashTagsSelector);
-      checkMistakeStartsOnlyPound(hashTagArray, textHashTagsSelector);
-      checkMistakeOnlyPound(hashTagArray, textHashTagsSelector);
-      checkMistakeBetweenHashTagSpace(hashTagArray, textHashTagsSelector);
-      checkMistakeUseJustOneHashTag(hashTagArray, textHashTagsSelector);
-      checkMisstakeMaxFiveHashTag(hashTagArray, textHashTagsSelector);
-      checkMistekeMaxCountHashTag(hashTagArray, textHashTagsSelector);
+      var hashTags = gethashTags(textHashTagsSelector);
+      checkMistakeStartsOnlyPound(hashTags, textHashTagsSelector);
+      checkMistakeOnlyPound(hashTags, textHashTagsSelector);
+      checkMistakeBetweenHashTagSpace(hashTags, textHashTagsSelector);
+      checkMistakeUseJustOneHashTag(hashTags, textHashTagsSelector);
+      checkMisstakeMaxFiveHashTag(hashTags, textHashTagsSelector);
+      checkMistekeMaxCountHashTag(hashTags, textHashTagsSelector);
     });
     textHashTagsSelector.addEventListener('invalid', function () {
       textHashTagsSelector.style.borderColor = 'red';
@@ -25,22 +25,22 @@
 
   // из input получаю строку с хеш-тегами, из это стрки делаю массив (split), убираю из массива пустые элементы
   // затем все буквы делаю маленькими и возвращаю массив хеш-теогов
-  var getHashTagArray = function (textHashTagsSelector) {
+  var gethashTags = function (textHashTagsSelector) {
     var hashTagsString = textHashTagsSelector.value;
-    var hashTagArray = hashTagsString.split(' ');
-    hashTagArray = hashTagArray.filter(function (element) {
+    var hashTags = hashTagsString.split(' ');
+    hashTags = hashTags.filter(function (element) {
       return element !== '';
     });
-    hashTagArray = hashTagArray.map(function (element) {
+    hashTags = hashTags.map(function (element) {
       return element.toLowerCase();
     });
-    return hashTagArray;
+    return hashTags;
   };
 
   // проверка начинается только с #
-  var checkMistakeStartsOnlyPound = function (hashTagArray, textHashTagsSelector) {
-    for (var i = 0; i < hashTagArray.length; i++) {
-      var startsFromPound = (hashTagArray[i][0] !== '#');
+  var checkMistakeStartsOnlyPound = function (hashTags, textHashTagsSelector) {
+    for (var i = 0; i < hashTags.length; i++) {
+      var startsFromPound = (hashTags[i][0] !== '#');
       if (startsFromPound) {
         textHashTagsSelector.setCustomValidity('Хеш-тег должен начинаться с решетки');
         return;
@@ -49,9 +49,9 @@
   };
 
   // проверка, что не один смвол # в хеш-теге
-  var checkMistakeOnlyPound = function (hashTagArray, textHashTagsSelector) {
-    for (var i = 0; i < hashTagArray.length; i++) {
-      var onlyPound = (hashTagArray[i] === '#');
+  var checkMistakeOnlyPound = function (hashTags, textHashTagsSelector) {
+    for (var i = 0; i < hashTags.length; i++) {
+      var onlyPound = (hashTags[i] === '#');
       if (onlyPound) {
         textHashTagsSelector.setCustomValidity('Хеш-тег не должен содержать только решетку');
         return;
@@ -60,9 +60,9 @@
   };
 
   // проверка что есть пробелы между хеш-тегом
-  var checkMistakeBetweenHashTagSpace = function (hashTagArray, textHashTagsSelector) {
-    for (var i = 0; i < hashTagArray.length; i++) {
-      var hashTag = hashTagArray[i];
+  var checkMistakeBetweenHashTagSpace = function (hashTags, textHashTagsSelector) {
+    for (var i = 0; i < hashTags.length; i++) {
+      var hashTag = hashTags[i];
       var count = 0;
       for (var j = 0; j < hashTag.length; j++) {
         if (hashTag[j] === '#') {
@@ -76,11 +76,11 @@
   };
 
   // Один и тот же хэш-тег не может быть использован дважды
-  var checkMistakeUseJustOneHashTag = function (hashTagArray, textHashTagsSelector) {
-    for (var i = 0; i < hashTagArray.length; i++) {
-      var hashtag1 = hashTagArray[i];
-      for (var j = i; j < hashTagArray.length; j++) {
-        var hashtag2 = hashTagArray[j];
+  var checkMistakeUseJustOneHashTag = function (hashTags, textHashTagsSelector) {
+    for (var i = 0; i < hashTags.length; i++) {
+      var hashtag1 = hashTags[i];
+      for (var j = i; j < hashTags.length; j++) {
+        var hashtag2 = hashTags[j];
         if ((hashtag1 === hashtag2) && (i !== j)) {
           textHashTagsSelector.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
         }
@@ -89,17 +89,17 @@
   };
 
   // Нельзя указать больше пяти хэш-тегов
-  var checkMisstakeMaxFiveHashTag = function (hashTagArray, textHashTagsSelector) {
-    var count = hashTagArray.length;
+  var checkMisstakeMaxFiveHashTag = function (hashTags, textHashTagsSelector) {
+    var count = hashTags.length;
     if (count > MAX_HASH_TAG_COUNT) {
       textHashTagsSelector.setCustomValidity('Нельзя указать больше пяти хэш-тегов');
     }
   };
 
   // Максимальная длина одного хэш-тега 20 символов, включая решётку'
-  var checkMistekeMaxCountHashTag = function (hashTagArray, textHashTagsSelector) {
-    for (var i = 0; i < hashTagArray.length; i++) {
-      if (hashTagArray[i].length > MAX_LENGTH_HASH_TAG) {
+  var checkMistekeMaxCountHashTag = function (hashTags, textHashTagsSelector) {
+    for (var i = 0; i < hashTags.length; i++) {
+      if (hashTags[i].length > MAX_LENGTH_HASH_TAG) {
         textHashTagsSelector.setCustomValidity('Максимальная длина одного хэш-тега 20 символов, включая решётку');
       }
     }

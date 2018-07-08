@@ -2,24 +2,24 @@
 (function () {
 
   // функция возвращает случайное значение
-  var randomNumber = function (i) {
+  var getRandomNumber = function (i) {
     var number = Math.floor(Math.random() * i);
     return number;
   };
 
   // показывает маленькие картинки вокруг надписи кексограм
-  var showThumbnails = function (picturesArray) {
+  var showThumbnails = function (pictures) {
     var pictureLink = document.querySelectorAll('.picture__link');
     for (var j = 0; j < pictureLink.length; j++) { // удаляем предыдущие фото
       pictureLink[j].parentElement.removeChild(pictureLink[j]);
     }
     var templatePicture = document.querySelector('#picture').content.querySelector('.picture__link');
     var picturesContainer = document.querySelector('.pictures');
-    for (var i = 0; i < picturesArray.length; i++) {
+    for (var i = 0; i < pictures.length; i++) {
       var pictureElement = templatePicture.cloneNode(true);
-      pictureElement.querySelector('.picture__img').src = picturesArray[i].url;
-      pictureElement.querySelector('.picture__stat--likes').textContent = picturesArray[i].likes;
-      pictureElement.querySelector('.picture__stat--comments').textContent = picturesArray[i].comments.length;
+      pictureElement.querySelector('.picture__img').src = pictures[i].url;
+      pictureElement.querySelector('.picture__stat--likes').textContent = pictures[i].likes;
+      pictureElement.querySelector('.picture__stat--comments').textContent = pictures[i].comments.length;
       var fragment = document.createDocumentFragment();
       fragment.appendChild(pictureElement);
       picturesContainer.appendChild(fragment);
@@ -49,7 +49,7 @@
     socialComnents.appendChild(li);
     var img = document.createElement('img');
     img.classList.add('social__picture');
-    img.src = 'img/avatar-' + ((randomNumber(6)) + 1) + '.svg';
+    img.src = 'img/avatar-' + ((getRandomNumber(6)) + 1) + '.svg';
     img.alt = 'Аватар комментатора фотографии';
     img.width = '35';
     img.height = '35';
@@ -76,18 +76,18 @@
   };
 
   // по клику покайзывется картинка т.е. навешивается обработчик
-  var addClickHandlerToShowBigPicture = function (picturesLinks, i, bigPictureElement, picturesArray) {
+  var addClickHandlerToShowBigPicture = function (picturesLinks, i, bigPictureElement, pictures) {
     picturesLinks[i].addEventListener('click', function () {
       showBigPicturePopUp(bigPictureElement);
-      showBigPicture(picturesArray[i], bigPictureElement);
+      showBigPicture(pictures[i], bigPictureElement);
     });
   };
 
   // маленькие картинки перебирает в цикле и передаются для навешивания в обработчик
-  var addClickHandlerToShowBigPopUp = function (picturesArray, bigPictureElement) {
+  var addClickHandlerToShowBigPopUp = function (pictures, bigPictureElement) {
     var picturesLinks = document.querySelectorAll('.picture__link');
     for (var i = 0; i < picturesLinks.length; i++) {
-      addClickHandlerToShowBigPicture(picturesLinks, i, bigPictureElement, picturesArray);
+      addClickHandlerToShowBigPicture(picturesLinks, i, bigPictureElement, pictures);
     }
   };
 
@@ -126,65 +126,65 @@
   };
 
   // показ популярных фото по кнопке
-  var showPopularPhoto = function (originPhotoArray, bigPictureElement) {
+  var showPopularPhoto = function (originPhoto, bigPictureElement) {
     var filterPopular = document.querySelector('#filter-popular');
     filterPopular.addEventListener('click', function () {
       window.debounce(function () {
         removeActivFilter(filterPopular);
-        var popularArray = [].concat(originPhotoArray);
-        showThumbnails(popularArray);
-        addClickHandlerToShowBigPopUp(popularArray, bigPictureElement);
+        var popularPhoto = [].concat(originPhoto);
+        showThumbnails(popularPhoto);
+        addClickHandlerToShowBigPopUp(popularPhoto, bigPictureElement);
       });
     });
   };
 
   // показ новых фото по кнопке
-  var showNewPhoto = function (originPhotoArray, bigPictureElement) {
+  var showNewPhoto = function (originPhoto, bigPictureElement) {
     var filterNew = document.querySelector('#filter-new');
-    var newPhotoArray = [];
-    var newArray = [].concat(originPhotoArray);
+    var newPhoto = [];
+    var originPhotoCopy = [].concat(originPhoto); // делаю копию массива
     for (var i = 0; i < 9; i++) {
-      var randomI = randomNumber(newArray.length);
-      newPhotoArray.push(newArray[randomI]);
-      newArray.splice(randomI, 1);
+      var randomI = getRandomNumber(originPhotoCopy.length);
+      newPhoto.push(originPhotoCopy[randomI]);
+      originPhotoCopy.splice(randomI, 1);
     }
     filterNew.addEventListener('click', function () {
       window.debounce(function () {
         removeActivFilter(filterNew);
-        showThumbnails(newPhotoArray);
-        addClickHandlerToShowBigPopUp(newPhotoArray, bigPictureElement);
+        showThumbnails(newPhoto);
+        addClickHandlerToShowBigPopUp(newPhoto, bigPictureElement);
       });
     });
   };
 
   // показ фото по популярности, сортируем по количеству коментариев
-  var showPhotoMaxToMinComents = function (originPhotoArray, bigPictureElement) {
+  var showPhotoMaxToMinComents = function (originPhoto, bigPictureElement) {
     var filterDiscussed = document.querySelector('#filter-discussed');
-    var discussedArray = [].concat(originPhotoArray);
-    discussedArray.sort(function (photo1, photo2) {
+    var photoSortedBydiscussed = [].concat(originPhoto);
+    photoSortedBydiscussed.sort(function (photo1, photo2) {
       return photo2.comments.length - photo1.comments.length;
     });
     filterDiscussed.addEventListener('click', function () {
       window.debounce(function () {
         removeActivFilter(filterDiscussed);
-        showThumbnails(discussedArray);
-        addClickHandlerToShowBigPopUp(discussedArray, bigPictureElement);
+        showThumbnails(photoSortedBydiscussed);
+        addClickHandlerToShowBigPopUp(photoSortedBydiscussed, bigPictureElement);
       });
     });
   };
 
   window.initializeThumbnailsAndPopup = function () {
-    window.backend.load(function (originPhotoArray) {
+    window.backend.load(function (originPhoto) {
       var bigPictureElement = document.querySelector('.big-picture');
       var bigPictureCancel = document.querySelector('.big-picture__cancel.cancel');
-      showThumbnails(originPhotoArray);
+      showThumbnails(originPhoto);
       removeCountComments();
       closePictureLinks(bigPictureElement, bigPictureCancel);
-      addClickHandlerToShowBigPopUp(originPhotoArray, bigPictureElement);
+      addClickHandlerToShowBigPopUp(originPhoto, bigPictureElement);
       addClassFilter();
-      showPopularPhoto(originPhotoArray, bigPictureElement);
-      showNewPhoto(originPhotoArray, bigPictureElement);
-      showPhotoMaxToMinComents(originPhotoArray, bigPictureElement);
+      showPopularPhoto(originPhoto, bigPictureElement);
+      showNewPhoto(originPhoto, bigPictureElement);
+      showPhotoMaxToMinComents(originPhoto, bigPictureElement);
     }, function (error) {
       var pictureContainer = document.querySelector('.pictures.container');
       var div = document.createElement('div');

@@ -3,18 +3,18 @@
 
   // работа с пином. Начало.
   // проверяем какой эфект активен и меняем эффект, в зависимости от того, в чем он "измеряетя"
-  var changeFilter = function (percent) {
-    var effectPueview = document.querySelector('.img-upload__preview');
-    if (effectPueview.classList.contains('effects__preview--chrome')) {
-      effectPueview.style.filter = 'grayscale(' + percent + ')';
-    } else if (effectPueview.classList.contains('effects__preview--sepia')) {
-      effectPueview.style.filter = 'sepia(' + percent + ')';
-    } else if (effectPueview.classList.contains('effects__preview--marvin')) {
-      effectPueview.style.filter = 'invert(' + percent * 100 + '%)';
-    } else if (effectPueview.classList.contains('effects__preview--phobos')) {
-      effectPueview.style.filter = 'blur(' + percent * 3 + 'px)';
-    } else if (effectPueview.classList.contains('effects__preview--heat')) {
-      effectPueview.style.filter = 'brightness(' + ((percent * 2) + 1) + ')';
+  window.changeFilter = function (percent) {
+    var effectPreview = document.querySelector('.img-upload__preview');
+    if (effectPreview.classList.contains('effects__preview--chrome')) {
+      effectPreview.style.filter = 'grayscale(' + percent + ')';
+    } else if (effectPreview.classList.contains('effects__preview--sepia')) {
+      effectPreview.style.filter = 'sepia(' + percent + ')';
+    } else if (effectPreview.classList.contains('effects__preview--marvin')) {
+      effectPreview.style.filter = 'invert(' + percent * 100 + '%)';
+    } else if (effectPreview.classList.contains('effects__preview--phobos')) {
+      effectPreview.style.filter = 'blur(' + percent * 3 + 'px)';
+    } else if (effectPreview.classList.contains('effects__preview--heat')) {
+      effectPreview.style.filter = 'brightness(' + ((percent * 2) + 1) + ')';
     }
   };
 
@@ -30,15 +30,23 @@
   // проверяем, чтобы пин был в нужных нам пределах, если да, то обновляем
   var checkMinAndMaxPin = function (startCoords, scalePin) {
     var minAndMaxX = findMaxAndMinX();
-    if ((startCoords.x > minAndMaxX.minX) && (startCoords.x < minAndMaxX.maxX)) {
+    if ((startCoords.x > minAndMaxX.minX) && (startCoords.x <= minAndMaxX.maxX)) {
       scalePin.style.left = (startCoords.x - minAndMaxX.minX) + 'px';
       var percent = ((startCoords.x - minAndMaxX.minX) / (minAndMaxX.maxX - minAndMaxX.minX));
-      changeFilter(percent);
+      window.changeFilter(percent);
       var scaleLevel = document.querySelector('.scale__level');
       scaleLevel.style.width = ('' + percent * 100 + '%'); // красим желтую
       var scaleValue = document.querySelector('.scale__value');
       scaleValue.value = percent * 100;
     }
+  };
+
+  // cтановление пина в крайнюю точку 100%
+  window.movePinOnMax = function () {
+    var minAndMax = findMaxAndMinX();
+    var maxX = {x: minAndMax.maxX};
+    var scalePin = document.querySelector('.scale__pin');
+    checkMinAndMaxPin(maxX, scalePin);
   };
 
   // движение пина
@@ -68,7 +76,7 @@
   };
 
 
-  window.changeFiltrAndMovePin = function () {
+  window.changeFilterAndMovePin = function () {
     movePin();
   };
 })();
