@@ -12,6 +12,7 @@
     var imgUploadOverlay = document.querySelector('.img-upload__overlay');
     imgUploadElement.addEventListener('change', function () {
       imgUploadOverlay.classList.remove('hidden');
+      closeImgUpLoadKeydown();
     });
   };
 
@@ -35,6 +36,7 @@
     textHashtagsElement.value = '';
     textDescriptionElement.value = '';
     imgUploadPreviewElement.style.filter = '';
+    document.removeEventListener('keydown', closeImgUpLoadByEsc);
   };
 
   // закрытие окна с добавлением нового фото
@@ -108,15 +110,17 @@
   };
 
   // закрытие окна если хеш-тег активен, то по esc окно не закрывается
-  var closeImgUpLoadKeydown = function (imgUploadOverlayElement) {
-    document.addEventListener('keydown', function (evt) {
-      var isHashTags = evt.target.classList.contains('text__hashtags');
-      var isTextDescription = (evt.target.classList.contains('text__description'));
-      if ((evt.keyCode === ESC_KEY_CODE) && !(isHashTags) && !(isTextDescription)) {
-        imgUploadOverlayElement.classList.add('hidden');
+  var closeImgUpLoadKeydown = function () {
+    document.addEventListener('keydown', closeImgUpLoadByEsc);
+  };
 
-      }
-    });
+  var closeImgUpLoadByEsc = function (evt) {
+    var imgUploadOverlayElement = document.querySelector('.img-upload__overlay');
+    var isHashTags = evt.target.classList.contains('text__hashtags');
+    var isTextDescription = (evt.target.classList.contains('text__description'));
+    if ((evt.keyCode === ESC_KEY_CODE) && !(isHashTags) && !(isTextDescription)) {
+      imgUploadOverlayElement.classList.add('hidden');
+    }
   };
 
   // добавляю приближение и удаление фото
@@ -140,11 +144,9 @@
   };
 
   window.addNewPhoto = function () {
-    var imgUploadOverlayElement = document.querySelector('.img-upload__overlay');
     addChangeHandlerToShowNewPhotoForm();
     closeImgUpLoad();
     addEffects();
-    closeImgUpLoadKeydown(imgUploadOverlayElement);
     showAndHideSlider();
     sendNewPhoto();
     addPlusAndMinusEventListener();

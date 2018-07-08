@@ -40,6 +40,7 @@
     bigPictureElement.querySelector('.comments-count').textContent = picture.comments.length;
     createAllComments(picture.comments);
     document.body.classList.add('modal-open');
+    addClosePictureEventHandler();
   };
 
   // удаляет класс для показа картинки покрупнее
@@ -107,6 +108,7 @@
       socialCommentElement[i].parentElement.removeChild(socialCommentElement[i]);
     }
     document.body.classList.remove('modal-open');
+    document.removeEventListener('keydown', closePictureByEsc);
   };
 
   // добавляется обратчик и вызываю функцию для закрытия картинки
@@ -117,13 +119,15 @@
   };
 
   // закрытие окна при нажатии клавиши esc
-  var closePictureEsc = function () {
-    var bigPictureElement = document.querySelector('.big-picture');
-    document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === ESC_KEY_CODE) {
-        bigPictureElement.classList.add('hidden');
-      }
-    });
+  var addClosePictureEventHandler = function () {
+    document.addEventListener('keydown', closePictureByEsc);
+  };
+
+  var closePictureByEsc = function (evt) {
+    if (evt.keyCode === ESC_KEY_CODE) {
+      var bigPictureElement = document.querySelector('.big-picture');
+      bigPictureElement.classList.add('hidden');
+    }
   };
 
   // после завершения загрузки фото с сервера
@@ -192,7 +196,6 @@
 
   window.initializeThumbnailsAndPopup = function () {
     window.backend.load(function (originPhoto) {
-      closePictureEsc();
       var bigPictureElement = document.querySelector('.big-picture');
       var bigPictureCancelElement = document.querySelector('.big-picture__cancel.cancel');
       showThumbnails(originPhoto);
