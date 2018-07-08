@@ -1,8 +1,10 @@
 'use strict';
-var main = function () {
-  window.addNewPhoto();
-  window.initializeThumbnailsAndPopup();
-  window.uploadFormValidation();
-  window.changeFilterAndMovePin();
-};
-main();
+(function () {
+  var main = function () {
+    window.addNewPhoto();
+    window.initializeThumbnailsAndPopup();
+    window.uploadFormValidation();
+    window.changeFilterAndMovePin();
+  };
+  main();
+})();

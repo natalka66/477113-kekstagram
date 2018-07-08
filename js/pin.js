@@ -4,24 +4,24 @@
   // работа с пином. Начало.
   // проверяем какой эфект активен и меняем эффект, в зависимости от того, в чем он "измеряетя"
   window.changeFilter = function (percent) {
-    var effectPreview = document.querySelector('.img-upload__preview');
-    if (effectPreview.classList.contains('effects__preview--chrome')) {
-      effectPreview.style.filter = 'grayscale(' + percent + ')';
-    } else if (effectPreview.classList.contains('effects__preview--sepia')) {
-      effectPreview.style.filter = 'sepia(' + percent + ')';
-    } else if (effectPreview.classList.contains('effects__preview--marvin')) {
-      effectPreview.style.filter = 'invert(' + percent * 100 + '%)';
-    } else if (effectPreview.classList.contains('effects__preview--phobos')) {
-      effectPreview.style.filter = 'blur(' + percent * 3 + 'px)';
-    } else if (effectPreview.classList.contains('effects__preview--heat')) {
-      effectPreview.style.filter = 'brightness(' + ((percent * 2) + 1) + ')';
+    var effectPreviewElement = document.querySelector('.img-upload__preview');
+    if (effectPreviewElement.classList.contains('effects__preview--chrome')) {
+      effectPreviewElement.style.filter = 'grayscale(' + percent + ')';
+    } else if (effectPreviewElement.classList.contains('effects__preview--sepia')) {
+      effectPreviewElement.style.filter = 'sepia(' + percent + ')';
+    } else if (effectPreviewElement.classList.contains('effects__preview--marvin')) {
+      effectPreviewElement.style.filter = 'invert(' + percent * 100 + '%)';
+    } else if (effectPreviewElement.classList.contains('effects__preview--phobos')) {
+      effectPreviewElement.style.filter = 'blur(' + percent * 3 + 'px)';
+    } else if (effectPreviewElement.classList.contains('effects__preview--heat')) {
+      effectPreviewElement.style.filter = 'brightness(' + ((percent * 2) + 1) + ')';
     }
   };
 
   // находим пределы передвижения пина
   var findMaxAndMinX = function () {
-    var scaleLine = document.querySelector('.scale__line');
-    var coordXMin = scaleLine.getBoundingClientRect();
+    var scaleLineElement = document.querySelector('.scale__line');
+    var coordXMin = scaleLineElement.getBoundingClientRect();
     var minX = coordXMin.x;
     var maxX = coordXMin.x + coordXMin.width;
     return {minX: minX, maxX: maxX};
@@ -34,10 +34,10 @@
       scalePin.style.left = (startCoords.x - minAndMaxX.minX) + 'px';
       var percent = ((startCoords.x - minAndMaxX.minX) / (minAndMaxX.maxX - minAndMaxX.minX));
       window.changeFilter(percent);
-      var scaleLevel = document.querySelector('.scale__level');
-      scaleLevel.style.width = ('' + percent * 100 + '%'); // красим желтую
-      var scaleValue = document.querySelector('.scale__value');
-      scaleValue.value = percent * 100;
+      var scaleLevelElement = document.querySelector('.scale__level');
+      scaleLevelElement.style.width = ('' + percent * 100 + '%'); // красим желтую
+      var scaleValueElement = document.querySelector('.scale__value');
+      scaleValueElement.value = percent * 100;
     }
   };
 
@@ -45,14 +45,14 @@
   window.movePinOnMax = function () {
     var minAndMax = findMaxAndMinX();
     var maxX = {x: minAndMax.maxX};
-    var scalePin = document.querySelector('.scale__pin');
-    checkMinAndMaxPin(maxX, scalePin);
+    var scalePinElement = document.querySelector('.scale__pin');
+    checkMinAndMaxPin(maxX, scalePinElement);
   };
 
   // движение пина
   var movePin = function () {
-    var scalePin = document.querySelector('.scale__pin');
-    scalePin.addEventListener('mousedown', function (evt) {
+    var scalePinElement = document.querySelector('.scale__pin');
+    scalePinElement.addEventListener('mousedown', function (evt) {
       evt.preventDefault();
       var startCoords = {
         x: evt.clientX
@@ -61,7 +61,7 @@
         startCoords = {
           x: moveEvt.clientX,
         };
-        checkMinAndMaxPin(startCoords, scalePin);
+        checkMinAndMaxPin(startCoords, scalePinElement);
       };
       // удаляю все обработчики событий
       var mouseUp = function (upEvt) {

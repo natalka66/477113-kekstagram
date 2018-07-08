@@ -16,20 +16,20 @@
 
   // показывает маленькие картинки вокруг надписи кексограм
   var showThumbnails = function (pictures) {
-    var pictureLink = document.querySelectorAll('.picture__link');
-    for (var j = 0; j < pictureLink.length; j++) { // удаляем предыдущие фото
-      pictureLink[j].parentElement.removeChild(pictureLink[j]);
+    var pictureLinkElement = document.querySelectorAll('.picture__link');
+    for (var j = 0; j < pictureLinkElement.length; j++) { // удаляем предыдущие фото
+      pictureLinkElement[j].parentElement.removeChild(pictureLinkElement[j]);
     }
-    var templatePicture = document.querySelector('#picture').content.querySelector('.picture__link');
-    var picturesContainer = document.querySelector('.pictures');
+    var templatePictureElement = document.querySelector('#picture').content.querySelector('.picture__link');
+    var picturesContainerElement = document.querySelector('.pictures');
     for (var i = 0; i < pictures.length; i++) {
-      var pictureElement = templatePicture.cloneNode(true);
+      var pictureElement = templatePictureElement.cloneNode(true);
       pictureElement.querySelector('.picture__img').src = pictures[i].url;
       pictureElement.querySelector('.picture__stat--likes').textContent = pictures[i].likes;
       pictureElement.querySelector('.picture__stat--comments').textContent = pictures[i].comments.length;
       var fragment = document.createDocumentFragment();
       fragment.appendChild(pictureElement);
-      picturesContainer.appendChild(fragment);
+      picturesContainerElement.appendChild(fragment);
     }
   };
 
@@ -52,8 +52,8 @@
     var li = document.createElement('li');
     li.classList.add('social__comment');
     li.classList.add('social__comment--text');
-    var socialComnents = document.querySelector('.social__comments');
-    socialComnents.appendChild(li);
+    var socialComnentsElement = document.querySelector('.social__comments');
+    socialComnentsElement.appendChild(li);
     var img = document.createElement('img');
     img.classList.add('social__picture');
     img.src = 'img/avatar-' + ((getRandomNumber(MAX_AVATAR_VALUE)) + MIN_AVATAR_VALUE) + '.svg';
@@ -76,15 +76,15 @@
 
   // скрываю количество коментариев и надпись "закрузить еще"
   var removeCountComments = function () {
-    var socialComentCount = document.querySelector('.social__comment-count');
-    socialComentCount.classList.add('visually-hidden');
-    var socialLoadmore = document.querySelector('.social__loadmore');
-    socialLoadmore.classList.add('visually-hidden');
+    var socialComentCountElement = document.querySelector('.social__comment-count');
+    socialComentCountElement.classList.add('visually-hidden');
+    var socialLoadmoreElement = document.querySelector('.social__loadmore');
+    socialLoadmoreElement.classList.add('visually-hidden');
   };
 
   // по клику покайзывется картинка т.е. навешивается обработчик
-  var addClickHandlerToShowBigPicture = function (picturesLinks, i, bigPictureElement, pictures) {
-    picturesLinks[i].addEventListener('click', function () {
+  var addClickHandlerToShowBigPicture = function (picturesLinksElements, i, bigPictureElement, pictures) {
+    picturesLinksElements[i].addEventListener('click', function () {
       showBigPicturePopUp(bigPictureElement);
       showBigPicture(pictures[i], bigPictureElement);
     });
@@ -92,9 +92,9 @@
 
   // маленькие картинки перебирает в цикле и передаются для навешивания в обработчик
   var addClickHandlerToShowBigPopUp = function (pictures, bigPictureElement) {
-    var picturesLinks = document.querySelectorAll('.picture__link');
-    for (var i = 0; i < picturesLinks.length; i++) {
-      addClickHandlerToShowBigPicture(picturesLinks, i, bigPictureElement, pictures);
+    var picturesLinksElement = document.querySelectorAll('.picture__link');
+    for (var i = 0; i < picturesLinksElement.length; i++) {
+      addClickHandlerToShowBigPicture(picturesLinksElement, i, bigPictureElement, pictures);
     }
   };
 
@@ -102,52 +102,52 @@
   // удаляем старые коментарии у фото
   var hideBigPicturePopUp = function (bigPictureElement) {
     bigPictureElement.classList.add('hidden');
-    var socialComment = document.querySelectorAll('.social__comment');
-    for (var i = 0; i < socialComment.length; i++) {
-      socialComment[i].parentElement.removeChild(socialComment[i]);
+    var socialCommentElement = document.querySelectorAll('.social__comment');
+    for (var i = 0; i < socialCommentElement.length; i++) {
+      socialCommentElement[i].parentElement.removeChild(socialCommentElement[i]);
     }
     document.body.classList.remove('modal-open');
   };
 
   // добавляется обратчик и вызываю функцию для закрытия картинки
-  var closePictureLinks = function (bigPictureElement, bigPictureCancel) {
-    bigPictureCancel.addEventListener('click', function () {
+  var closePictureLinks = function (bigPictureElement, bigPictureCancelElement) {
+    bigPictureCancelElement.addEventListener('click', function () {
       hideBigPicturePopUp(bigPictureElement);
     });
   };
 
   // закрытие окна при нажатии клавиши esc
   var closePictureEsc = function () {
-    var bigPicture = document.querySelector('.big-picture');
+    var bigPictureElement = document.querySelector('.big-picture');
     document.addEventListener('keydown', function (evt) {
       if (evt.keyCode === ESC_KEY_CODE) {
-        bigPicture.classList.add('hidden');
+        bigPictureElement.classList.add('hidden');
       }
     });
   };
 
   // после завершения загрузки фото с сервера
   var addClassFilter = function () {
-    var imgFiltres = document.querySelector('.img-filters');
-    imgFiltres.classList.remove('img-filters--inactive');
+    var imgFiltersElement = document.querySelector('.img-filters');
+    imgFiltersElement.classList.remove('img-filters--inactive');
   };
   // функция показывает, что кнопка активна. Выделяется белым.
   var removeActivFilter = function (activeButton) {
-    var filterDiscussed = document.querySelector('#filter-discussed');
-    var filterNew = document.querySelector('#filter-new');
-    var filterPopular = document.querySelector('#filter-popular');
-    filterDiscussed.classList.remove('img-filters__button--active');
-    filterNew.classList.remove('img-filters__button--active');
-    filterPopular.classList.remove('img-filters__button--active');
+    var filterDiscussedElement = document.querySelector('#filter-discussed');
+    var filterNewElement = document.querySelector('#filter-new');
+    var filterPopularElement = document.querySelector('#filter-popular');
+    filterDiscussedElement.classList.remove('img-filters__button--active');
+    filterNewElement.classList.remove('img-filters__button--active');
+    filterPopularElement.classList.remove('img-filters__button--active');
     activeButton.classList.add('img-filters__button--active');
   };
 
   // показ популярных фото по кнопке
   var showPopularPhoto = function (originPhoto, bigPictureElement) {
-    var filterPopular = document.querySelector('#filter-popular');
-    filterPopular.addEventListener('click', function () {
+    var filterPopularElement = document.querySelector('#filter-popular');
+    filterPopularElement.addEventListener('click', function () {
       window.debounce(function () {
-        removeActivFilter(filterPopular);
+        removeActivFilter(filterPopularElement);
         var popularPhoto = [].concat(originPhoto);
         showThumbnails(popularPhoto);
         addClickHandlerToShowBigPopUp(popularPhoto, bigPictureElement);
@@ -157,7 +157,7 @@
 
   // показ новых фото по кнопке
   var showNewPhoto = function (originPhoto, bigPictureElement) {
-    var filterNew = document.querySelector('#filter-new');
+    var filterNewElement = document.querySelector('#filter-new');
     var newPhoto = [];
     var originPhotoCopy = [].concat(originPhoto); // делаю копию массива
     for (var i = 0; i < MAX_NUMBER_OF_NEW_PHOTOS; i++) {
@@ -165,9 +165,9 @@
       newPhoto.push(originPhotoCopy[randomI]);
       originPhotoCopy.splice(randomI, 1);
     }
-    filterNew.addEventListener('click', function () {
+    filterNewElement.addEventListener('click', function () {
       window.debounce(function () {
-        removeActivFilter(filterNew);
+        removeActivFilter(filterNewElement);
         showThumbnails(newPhoto);
         addClickHandlerToShowBigPopUp(newPhoto, bigPictureElement);
       });
@@ -176,14 +176,14 @@
 
   // показ фото по популярности, сортируем по количеству коментариев
   var showPhotoMaxToMinComents = function (originPhoto, bigPictureElement) {
-    var filterDiscussed = document.querySelector('#filter-discussed');
+    var filterDiscussedElement = document.querySelector('#filter-discussed');
     var photoSortedBydiscussed = [].concat(originPhoto);
     photoSortedBydiscussed.sort(function (photo1, photo2) {
       return photo2.comments.length - photo1.comments.length;
     });
-    filterDiscussed.addEventListener('click', function () {
+    filterDiscussedElement.addEventListener('click', function () {
       window.debounce(function () {
-        removeActivFilter(filterDiscussed);
+        removeActivFilter(filterDiscussedElement);
         showThumbnails(photoSortedBydiscussed);
         addClickHandlerToShowBigPopUp(photoSortedBydiscussed, bigPictureElement);
       });
@@ -194,20 +194,20 @@
     window.backend.load(function (originPhoto) {
       closePictureEsc();
       var bigPictureElement = document.querySelector('.big-picture');
-      var bigPictureCancel = document.querySelector('.big-picture__cancel.cancel');
+      var bigPictureCancelElement = document.querySelector('.big-picture__cancel.cancel');
       showThumbnails(originPhoto);
       removeCountComments();
-      closePictureLinks(bigPictureElement, bigPictureCancel);
+      closePictureLinks(bigPictureElement, bigPictureCancelElement);
       addClickHandlerToShowBigPopUp(originPhoto, bigPictureElement);
       addClassFilter();
       showPopularPhoto(originPhoto, bigPictureElement);
       showNewPhoto(originPhoto, bigPictureElement);
       showPhotoMaxToMinComents(originPhoto, bigPictureElement);
     }, function (error) {
-      var pictureContainer = document.querySelector('.pictures.container');
-      var div = document.createElement('div');
-      div.textContent = error;
-      pictureContainer.appendChild(div);
+      var pictureContainerElement = document.querySelector('.pictures.container');
+      var element = document.createElement('div');
+      element.textContent = error;
+      pictureContainerElement.appendChild(element);
     });
   };
 })();
