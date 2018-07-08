@@ -1,5 +1,10 @@
 'use strict';
 (function () {
+  var EFFECTS_CLASSES = ['effects__preview--heat', 'effects__preview--chrome', 'effects__preview--sepia', 'effects__preview--marvin', 'effects__preview--phobos'];
+  var MAX_FILTER_VALUE = 1;
+  var ESC_KEY_CODE = 27;
+  var SCALE_STEP = 0.25;
+  var MAX_SCALE_VALUE = 1;
 
   // показывает окно для добавления нового фото !!!
   var addChangeHandlerToShowNewPhotoForm = function () {
@@ -59,9 +64,8 @@
 
   // удаляю все эфекты (потому что нужно все убрать, а потом один добавить)
   var imgUploadClassListRemove = function (imgUploadPreview) {
-    var effects = ['effects__preview--heat', 'effects__preview--chrome', 'effects__preview--sepia', 'effects__preview--marvin', 'effects__preview--phobos'];
-    for (var i = 0; i < effects.length; i++) {
-      imgUploadPreview.classList.remove(effects[i]);
+    for (var i = 0; i < EFFECTS_CLASSES.length; i++) {
+      imgUploadPreview.classList.remove(EFFECTS_CLASSES[i]);
     }
   };
 
@@ -73,7 +77,7 @@
       imgUploadPreview.classList.add(effectsPreview);
       var scale = document.querySelector('.img-upload__scale');
       scale.classList.remove('hidden');
-      window.changeFilter(1);
+      window.changeFilter(MAX_FILTER_VALUE);
       window.movePinOnMax();
     });
   };
@@ -108,7 +112,7 @@
     document.addEventListener('keydown', function (evt) {
       var isHashTags = evt.target.classList.contains('text__hashtags');
       var isTextDescription = (evt.target.classList.contains('text__description'));
-      if ((evt.keyCode === 27) && !(isHashTags) && !(isTextDescription)) {
+      if ((evt.keyCode === ESC_KEY_CODE) && !(isHashTags) && !(isTextDescription)) {
         imgUploadOverlay.classList.add('hidden');
 
       }
@@ -122,14 +126,14 @@
     var uploadPreview = document.querySelector('.img-upload__preview');
     var reasizeControlValue = document.querySelector('.resize__control--value');
     reasizeControlValue.value = '100%';
-    var scale = 1;
+    var scale = MAX_SCALE_VALUE;
     controlMinus.addEventListener('click', function () {
-      scale = Math.max(0.25, scale - 0.25);
+      scale = Math.max(SCALE_STEP, scale - SCALE_STEP);
       uploadPreview.style.transform = 'scale(' + scale + ')';
       reasizeControlValue.value = scale * 100 + '%';
     });
     controlPlus.addEventListener('click', function () {
-      scale = Math.min(1, scale + 0.25);
+      scale = Math.min(MAX_SCALE_VALUE, scale + SCALE_STEP);
       uploadPreview.style.transform = 'scale(' + scale + ')';
       reasizeControlValue.value = scale * 100 + '%';
     });

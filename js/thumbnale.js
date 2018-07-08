@@ -1,6 +1,13 @@
 'use strict';
 (function () {
 
+  var MIN_AVATAR_VALUE = 1;
+  var MAX_AVATAR_VALUE = 6;
+  var AVATAR_SIZE = 35;
+  var MAX_NUMBER_OF_COMMENTS = 5;
+  var ESC_KEY_CODE = 27;
+  var MAX_NUMBER_OF_NEW_PHOTOS = 10;
+
   // функция возвращает случайное значение
   var getRandomNumber = function (i) {
     var number = Math.floor(Math.random() * i);
@@ -49,10 +56,10 @@
     socialComnents.appendChild(li);
     var img = document.createElement('img');
     img.classList.add('social__picture');
-    img.src = 'img/avatar-' + ((getRandomNumber(6)) + 1) + '.svg';
+    img.src = 'img/avatar-' + ((getRandomNumber(MAX_AVATAR_VALUE)) + MIN_AVATAR_VALUE) + '.svg';
     img.alt = 'Аватар комментатора фотографии';
-    img.width = '35';
-    img.height = '35';
+    img.width = AVATAR_SIZE;
+    img.height = AVATAR_SIZE;
     li.appendChild(img);
     var span = document.createElement('span');
     span.textContent = text;
@@ -62,7 +69,7 @@
   // цикл создает коментарии. Используем в другой функции, при нажатии на картинку и приближении ее
   // в цикле ограничитель, не более 5 коментариев
   var createAllComments = function (comments) {
-    for (var i = 0; i < Math.min(comments.length, 5); i++) {
+    for (var i = 0; i < Math.min(comments.length, MAX_NUMBER_OF_COMMENTS); i++) {
       createOneCommentElement(comments[i]);
     }
   };
@@ -113,7 +120,7 @@
   var closePictureEsc = function () {
     var bigPicture = document.querySelector('.big-picture');
     document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === 27) {
+      if (evt.keyCode === ESC_KEY_CODE) {
         bigPicture.classList.add('hidden');
       }
     });
@@ -153,7 +160,7 @@
     var filterNew = document.querySelector('#filter-new');
     var newPhoto = [];
     var originPhotoCopy = [].concat(originPhoto); // делаю копию массива
-    for (var i = 0; i < 9; i++) {
+    for (var i = 0; i < MAX_NUMBER_OF_NEW_PHOTOS; i++) {
       var randomI = getRandomNumber(originPhotoCopy.length);
       newPhoto.push(originPhotoCopy[randomI]);
       originPhotoCopy.splice(randomI, 1);
