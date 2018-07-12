@@ -4,7 +4,7 @@
     window.addNewPhoto();
     window.initializeThumbnailsAndPopup();
     window.uploadFormValidation();
-    window.changeFilterAndMovePin();
+    window.pin.changeFilterAndMovePin();
   };
   main();
 })();

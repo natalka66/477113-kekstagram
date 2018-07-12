@@ -10,7 +10,7 @@
     textHashTagsElement.addEventListener('input', function () {
       textHashTagsElement.style.borderColor = '';
       textHashTagsElement.setCustomValidity('');
-      var hashTags = gethashTags(textHashTagsElement);
+      var hashTags = getHashTags(textHashTagsElement);
       checkMistakeStartsOnlyPound(hashTags, textHashTagsElement);
       checkMistakeOnlyPound(hashTags, textHashTagsElement);
       checkMistakeBetweenHashTagSpace(hashTags, textHashTagsElement);
@@ -25,7 +25,7 @@
 
   // из input получаю строку с хеш-тегами, из это стрки делаю массив (split), убираю из массива пустые элементы
   // затем все буквы делаю маленькими и возвращаю массив хеш-теогов
-  var gethashTags = function (textHashTagsElement) {
+  var getHashTags = function (textHashTagsElement) {
     var hashTagsString = textHashTagsElement.value;
     var hashTags = hashTagsString.split(' ');
     hashTags = hashTags.filter(function (element) {
@@ -77,14 +77,14 @@
 
   // Один и тот же хэш-тег не может быть использован дважды
   var checkMistakeUseJustOneHashTag = function (hashTags, textHashTagsElement) {
+    var hashTagsObject = {};
     for (var i = 0; i < hashTags.length; i++) {
       var hashtag1 = hashTags[i];
-      for (var j = i; j < hashTags.length; j++) {
-        var hashtag2 = hashTags[j];
-        if ((hashtag1 === hashtag2) && (i !== j)) {
-          textHashTagsElement.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
-        }
+      if (hashTagsObject[hashtag1]) {
+        textHashTagsElement.setCustomValidity('Один и тот же хэш-тег не может быть использован дважды');
+        break;
       }
+      hashTagsObject[hashtag1] = true;
     }
   };
 
