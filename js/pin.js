@@ -27,8 +27,8 @@
   var findMaxAndMinX = function () {
     var scaleLineElement = document.querySelector('.scale__line');
     var coordXMin = scaleLineElement.getBoundingClientRect();
-    var minX = coordXMin.x;
-    var maxX = coordXMin.x + coordXMin.width;
+    var minX = coordXMin.x || coordXMin.left;
+    var maxX = minX + (coordXMin.width || (coordXMin.right - coordXMin.left));
     return {minX: minX, maxX: maxX};
   };
 
